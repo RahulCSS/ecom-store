@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root{
+  --bgColor: #F1F2F4;
   --logoColor: #272B3C;
   --menuColor: #323543;
 }
@@ -25,7 +27,8 @@ a{
   color: inherit;
 }
 
-.app{
-  width: 90%;
-  margin: auto;
+
+/* Optional: Customize the dropdown items as well */
+.sharp-corner-dropdown .ant-dropdown-menu {
+  border-radius: 0 !important;  /* Ensure the items inside also have sharp corners */
 }

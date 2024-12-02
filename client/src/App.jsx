@@ -1,9 +1,9 @@
 import React from 'react'
-import NavBar from './components/NavBar'
+import NavBar from './pages/NavBar'
 
 const App = () => {
   return (
-    <div className='app'>
+    <div className="bg-[--bgColor] m-auto">
       <NavBar/>
     </div>
   )
