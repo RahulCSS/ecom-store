@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { Avatar, Menu, Drawer, Dropdown } from 'antd';
 import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom'; 
+import {useDispatch} from 'react-redux'
+import {showLoginModal,showSignupModal} from '../store/ModalSlice'
+import LoginModal from '../components/LoginModal';
+import SignupModal from '../components/SignupModal';
 
 const NavBar = () => {
+  const dispatch = useDispatch();
   const [currentKey, setCurrentKey] = useState(null);
+  const showLogin =()=>{
+    dispatch(showLoginModal());
+    console.log('a');
+  }
+  const showSignup =()=>{
+    dispatch(showSignupModal());
+    console.log('b');
+  }
 
   const menuItems = [
     { key: 'store', label: 'Store' },
@@ -23,7 +35,7 @@ const NavBar = () => {
         <>
           <div>{label}</div> {/* First line */}
           <div style={{ fontSize: '0.9rem', color: 'blue', marginTop: '5px' }}>
-              <a style={{ marginRight: '10px' }}>Sign In</a> | <a style={{ marginLeft: '10px' }}>Sign Up</a>
+              <a onClick={showLogin} style={{ marginRight: '10px' }}>Sign In</a> | <a onClick={showSignup}style={{ marginLeft: '10px' }}>Sign Up</a>
           </div>
         </>
       );
@@ -65,10 +77,9 @@ const NavBar = () => {
           <Menu
             selectedKeys={[currentKey]}
             mode="horizontal"
-            items={menuItems}  // Use the `items` prop instead of `children`
+            items={menuItems}  
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            
             style={{ fontSize: '1rem', justifyContent: 'center'}}
           />
         </div>
@@ -84,6 +95,8 @@ const NavBar = () => {
               <Avatar size="large" icon={<UserOutlined />} className="cursor-pointer mx-4" />
             </a>
           </Dropdown>
+          <LoginModal/>
+          <SignupModal/>
         </div>
       </div>
     </div>
