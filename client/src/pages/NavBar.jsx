@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
-import { Avatar, Menu, Drawer, Dropdown } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Avatar, Menu, Dropdown, message } from 'antd';
 import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined } from '@ant-design/icons';
 import {useDispatch} from 'react-redux'
-import {showLoginModal,showSignupModal} from '../store/ModalSlice'
+import {setUserRole, showLoginModal,showSignupModal} from '../store/ModalSlice'
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
+import { GetCurrentUser } from '../apicalls/user';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentKey, setCurrentKey] = useState(null);
   const showLogin =()=>{
     dispatch(showLoginModal());
-    console.log('a');
+
   }
   const showSignup =()=>{
     dispatch(showSignupModal());
-    console.log('b');
+  }
+  const signupCustomer = ()=>{
+    showSignup();
+    dispatch(setUserRole('Customer'));
   }
 
   const menuItems = [
@@ -35,7 +41,7 @@ const NavBar = () => {
         <>
           <div>{label}</div> {/* First line */}
           <div style={{ fontSize: '0.9rem', color: 'blue', marginTop: '5px' }}>
-              <a onClick={showLogin} style={{ marginRight: '10px' }}>Sign In</a> | <a onClick={showSignup}style={{ marginLeft: '10px' }}>Sign Up</a>
+              <a onClick={showLogin} style={{ marginRight: '10px' }}>Sign In</a> | <a onClick={signupCustomer}style={{ marginLeft: '10px' }}>Sign Up</a>
           </div>
         </>
       );
@@ -61,6 +67,31 @@ const NavBar = () => {
   const handleMouseOut = () => {
   // Close the drawer when mouse leaves
   };
+
+  const getpresentUser = async () => {
+    try {
+      const response = await GetCurrentUser();
+      if (response.success) {
+        dispatch(setUser({user:response.data, role:response.data.role, name:response.data.name}));
+      } else {
+        message.error(response.message);
+        handleClear();
+      }
+    } catch (error) {
+      message.error('Failed to fetch user data, please try again later');
+      handleClear();
+    }
+  };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      getpresentUser();
+    } else {
+      navigate('/');
+    }
+  },[]);
 
   return (
     <div className="bg-white">

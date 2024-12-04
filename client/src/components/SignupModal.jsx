@@ -3,21 +3,46 @@ import { Modal, Form, Input, Button, Flex, message } from "antd";
 import { ArrowRightOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from'react-redux';
 import { hideSignupModal,showLoginModal } from '../store/ModalSlice';
+import { RegisterUser } from '../apicalls/user';
 
 const SignupModal = () => {
     const dispatch = useDispatch();
+    const userRole = useSelector((state) => state.modal.userRole);
     const visible = useSelector((state) => state.modal.isSignupModalOpen);
-    console.log('Signup-'+visible);
+    //console.log('Signup-'+visible);
 
     const [form] = Form.useForm();
     const handleRegisterClick = () => {
         dispatch(hideSignupModal()); 
         dispatch(showLoginModal());
     };
-    const handleSubmit = ()=>{
+    const handleSubmit = async(values)=>{
         dispatch(hideSignupModal());
+        const { confirmPassword , ...filtered } = values;
+        const userPayload = {...filtered, role: userRole};
+        //console.log(values, filtered, userPayload);
+        try{
+          const response = await RegisterUser(userPayload);
+          if(response.success){
+            message.success(response.message);
+            message.info({
+              content: "You can login now.",
+            });
+            setTimeout(() => {
+              handleRegisterClick();
+            },1000);
+            //console.log(response.message);
+          }else{
+            message.error(response.message);
+            //console.error(response.message);
+          }
+        }catch(error){
+          message.error(error.message);
+          //console.error(error.message);
+        }
         form.resetFields();
-    }
+    };
+
   return (
     <Modal
       title="Sign Up"
@@ -50,7 +75,8 @@ const SignupModal = () => {
         <Form.Item
           name="password"
           label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: 'Please input your password!' },
+                  { min: 8, message: 'Password must be at least 8 characters!'},]}
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
