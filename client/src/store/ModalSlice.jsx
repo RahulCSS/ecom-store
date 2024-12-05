@@ -5,9 +5,6 @@ const modalSlice = createSlice({
     initialState: {
         isLoginModalOpen: false,
         isSignupModalOpen: false,
-        user: null,
-        userName: null,
-        userRole: null,
     },
     reducers:{
         showLoginModal(state){
@@ -22,21 +19,8 @@ const modalSlice = createSlice({
         hideSignupModal: (state) => {
             state.isSignupModalOpen = false;
         },
-        setUserRole: (state,action) => {
-            state.userRole = action.payload;
-        },
-        setUser: (state,action) => {
-            state.user = action.payload;
-            state.userRole = action.payload.role;
-            state.userName = action.payload.name;
-        },
-        clearUser: (state) => {
-            state.user = null;
-            state.userRole = null;
-            state.userName = null;
-        },
     },
 });
 
-export const { showLoginModal,hideLoginModal,showSignupModal,hideSignupModal,setUserRole, setUser, clearUser} = modalSlice.actions;
+export const { showLoginModal,hideLoginModal,showSignupModal,hideSignupModal} = modalSlice.actions;
 export default modalSlice.reducer;

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Menu, Dropdown, message } from 'antd';
 import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined } from '@ant-design/icons';
-import {useDispatch} from 'react-redux'
-import {setUserRole, showLoginModal,showSignupModal} from '../store/ModalSlice'
+import {useDispatch, useSelector} from 'react-redux'
+import { showLoginModal,showSignupModal} from '../store/ModalSlice'
+import { setUserRole } from '../store/UserSlice';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
@@ -12,6 +13,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentKey, setCurrentKey] = useState(null);
+  const {user,role,name} = useSelector((state)=> state.user);
   const showLogin =()=>{
     dispatch(showLoginModal());
 

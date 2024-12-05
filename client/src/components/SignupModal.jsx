@@ -7,7 +7,7 @@ import { RegisterUser } from '../apicalls/user';
 
 const SignupModal = () => {
     const dispatch = useDispatch();
-    const userRole = useSelector((state) => state.modal.userRole);
+    const userRole = useSelector((state) => state.user.role);
     const visible = useSelector((state) => state.modal.isSignupModalOpen);
     //console.log('Signup-'+visible);
 
