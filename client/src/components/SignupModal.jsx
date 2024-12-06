@@ -10,6 +10,7 @@ const SignupModal = () => {
     const userRole = useSelector((state) => state.user.role);
     const visible = useSelector((state) => state.modal.isSignupModalOpen);
     //console.log('Signup-'+visible);
+    console.log(userRole);
 
     const [form] = Form.useForm();
     const handleRegisterClick = () => {
@@ -60,10 +61,10 @@ const SignupModal = () => {
       >
         <Form.Item
           name="name"
-          label="Username"
+          label={userRole ==='Vendor' ? 'Store Name' : userRole === 'Delivery' ? 'Delivery Agent Name' : 'Username'}
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<UserOutlined />} placeholder={userRole ==='Vendor' ? 'Store Name' : userRole === 'Delivery' ? 'Delivery Agent Name' : 'Username'} />
         </Form.Item>
         <Form.Item
           name="email"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Menu, Dropdown, message, Spin } from 'antd';
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined} from '@ant-design/icons';
+import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux'
 import { showLoginModal,showSignupModal} from '../store/ModalSlice'
 import { setUserRole, setUser, clearUser } from '../store/UserSlice';
@@ -33,6 +33,15 @@ const NavBar = () => {
     dispatch(setUserRole('Customer'));
   }
 
+  const signupSeller = ()=>{
+    showSignup();
+    dispatch(setUserRole('Vendor'));
+  }
+  const signupDelivery = ()=>{
+    showSignup();
+    dispatch(setUserRole('Delivery'));
+  }
+
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(clearUser());
@@ -59,15 +68,29 @@ const NavBar = () => {
   ];
   
   const renderMenuLabel = (label) => {
-    if (!isUser) {
+    if (!isUser && label =='Welcome to ZipCart') {
       return (
         <>
           <div>{label}</div> {/* First line */}
           <div style={{ fontSize: '0.9rem', color: 'blue', marginTop: '5px' }}>
-              <a onClick={showLogin} style={{ marginRight: '10px' }}>Sign In</a> | <a onClick={signupCustomer}style={{ marginLeft: '10px' }}>Sign Up</a>
+              <a onClick={showLogin} style={{ marginRight: '10px' }}>Sign In</a>
+               | 
+              <a onClick={signupCustomer}style={{ marginLeft: '10px' }}>Sign Up</a>
           </div>
         </>
       );
+    }
+    if (label == 'Become a Seller/Delivery'){
+      return (
+        <>
+          <div>Become a Seller/Delivery</div>
+          <div style={{ fontSize: '0.9rem', color: 'blue', marginTop: '5px' }}>
+              <a onClick={signupSeller} style={{ marginRight: '10px' }}><BankOutlined /> Sign Up</a>
+               | 
+              <a onClick={signupDelivery}style={{ marginLeft: '10px' }}><TruckOutlined /> Sign Up</a>
+          </div>
+        </>
+      )
     }
     return <div>{label}</div>; // For other labels, just render the text normally
   };
@@ -79,8 +102,10 @@ const NavBar = () => {
     { key: 'orders', label: 'Orders' ,icon: <ProfileOutlined />},
     { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> },
     { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> },
-    { key:'becomeseller', label: isUser ? 'Logout' : 'Become a Seller/Delivery', 
-                                icon: isUser ? <LogoutOutlined /> : <BankOutlined />, onClick: isUser ? logout : null}
+    { key:'becomeseller', label: isUser ? 'Logout' : renderMenuLabel('Become a Seller/Delivery'), 
+                                icon: isUser ? <LogoutOutlined /> : '', onClick: isUser ? logout : null},
+                                
+
   ];
 
 
