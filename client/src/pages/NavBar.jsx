@@ -121,9 +121,9 @@ const NavBar = () => {
   },[]);
 
   return (
-    <div className="bg-white">
+    <div >
       {/* Navbar Container */}
-      <div className="max-w-screen-xl mx-auto pt-2 pb-0 z-50 flex justify-between items-center w-full border-b shadow-lg">
+      <div className="max-w-screen-3xl mx-auto px-[5rem] pt-2 pb-0 z-50 flex justify-between items-center w-full border-b shadow-lg bg-white">
 
         {/* Logo */}
         <div className="flex items-center space-x-4 mx-4">
