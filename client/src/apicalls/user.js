@@ -1,4 +1,5 @@
 import {axiosInstance} from ".";
+const token = localStorage.getItem('token');
 
 //*Register
 export const RegisterUser = async (payload) => {

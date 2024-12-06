@@ -28,9 +28,8 @@ const loginUser = async (req,res) =>{
         user.token = accessToken;
         await user.save();
         // Desturcturing to exclude data from user:
-        const { password:_, __v:__, cart:___,...userData } = user.toObject();
-        const cart = user.cart;
-        res.json ({success:true, message:"User Logged in Successfully",userData,cart});
+        const { password:_, __v:__, updatedAt:___, createdAt:____ ,...userData } = user.toObject();
+        res.json ({success:true, message:"User Logged in Successfully",userData});
     }catch(error){
         console.log(error);
         res.json({success:false, message: "Error"});
@@ -75,23 +74,16 @@ const registerUser = async (req,res) =>{
 // Getting current user details with token verification and validation of user id in request body  
 const getCurrentUser = async (req,res) =>{
     try{
-        const user = await userModel.findById(req.body.userId).select('-password');
+        const user = await userModel.findById(req.body.userId).select('-password -__v -updatedAt -createdAt');
         if (!user) {
-            return res.send({
-                success: false,
-                message: 'User not found'
-            });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
-        return res.send({
-            success: true,
-            message: 'User details retrieved successfully',
-            data: user
-        });
-    }catch(err){
-        return res.send({
-            success: false,
-            message: 'Something went wrong'
-        });
+        res.status(200).json({ success: true, data: user });
+    }catch(error){
+        console.error(error);
+        if (!res.headersSent) {  // Check if headers are already sent
+            return res.status(500).json({ success: false, message: "Server error" });
+        }
     }
 }; 
 

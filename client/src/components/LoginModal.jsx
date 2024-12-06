@@ -1,10 +1,11 @@
 import React from 'react'
-import { Modal, Form, Input, Button, Flex } from "antd"
+import { Modal, Form, Input, Button, Flex, message } from "antd"
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { hideLoginModal, showSignupModal} from '../store/ModalSlice'
 import {Link} from 'react-router-dom'
 import { LoginUser } from '../apicalls/user'
+import { setUser } from '../store/UserSlice'
 
 const LoginModal = () => {
     const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const LoginModal = () => {
             if(response.success){
                 message.success(response.message);
                 localStorage.setItem('token', response.userData.token);
-                dispatch(setUser({user:response.userData, role:response.userData.role, name:response.userData.name}));
+                dispatch(setUser(response.userData));
             }else{
                 message.error(response.message);
                 //console.error(response.message);

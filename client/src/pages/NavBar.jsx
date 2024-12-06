@@ -1,30 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Menu, Dropdown, message } from 'antd';
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined } from '@ant-design/icons';
+import { Avatar, Menu, Dropdown, message, Spin } from 'antd';
+import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux'
 import { showLoginModal,showSignupModal} from '../store/ModalSlice'
-import { setUserRole } from '../store/UserSlice';
+import { setUserRole, setUser, clearUser } from '../store/UserSlice';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
 import { Link, useNavigate } from 'react-router-dom';
 
+
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentKey, setCurrentKey] = useState(null);
-  const {user,role,name} = useSelector((state)=> state.user);
+  const user = useSelector((state)=> state.user.userData);
+  const isUser = !!user;
+  const [loading, setLoading] = useState(false);
+
+
+  
   const showLogin =()=>{
     dispatch(showLoginModal());
-
   }
+
   const showSignup =()=>{
     dispatch(showSignupModal());
   }
+
   const signupCustomer = ()=>{
     showSignup();
     dispatch(setUserRole('Customer'));
   }
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    dispatch(clearUser());
+    message.info({
+      content: "You have been logged out successfully!",
+      style: {
+        marginTop: "30vh",
+      },
+    });
+    setTimeout(() => {
+      navigate("/");
+    }, 1000);
+  };
 
   const menuItems = [
     { key: 'store', label: 'Store' },
@@ -38,7 +59,7 @@ const NavBar = () => {
   ];
   
   const renderMenuLabel = (label) => {
-    if (label === 'Welcome to ZipCart') {
+    if (!isUser) {
       return (
         <>
           <div>{label}</div> {/* First line */}
@@ -52,13 +73,14 @@ const NavBar = () => {
   };
 
   const userMenuItems = [
-    { key: 'welcome', label: renderMenuLabel('Welcome to ZipCart') },
+    { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
     { type: 'divider' },
     { key: 'myaccount', label: 'My Account', icon: <UserOutlined />, },
     { key: 'orders', label: 'Orders' ,icon: <ProfileOutlined />},
     { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> },
     { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> },
-    { key:'becomeseller', label:'Become a Seller/Delivery', icon: <BankOutlined />}
+    { key:'becomeseller', label: isUser ? 'Logout' : 'Become a Seller/Delivery', 
+                                icon: isUser ? <LogoutOutlined /> : <BankOutlined />, onClick: isUser ? logout : null}
   ];
 
 
@@ -72,16 +94,19 @@ const NavBar = () => {
 
   const getpresentUser = async () => {
     try {
+      setLoading(true); 
       const response = await GetCurrentUser();
       if (response.success) {
-        dispatch(setUser({user:response.data, role:response.data.role, name:response.data.name}));
+        dispatch(setUser(response.data));
       } else {
         message.error(response.message);
-        handleClear();
+        clearUser();
       }
     } catch (error) {
       message.error('Failed to fetch user data, please try again later');
-      handleClear();
+      clearUser();
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -125,13 +150,18 @@ const NavBar = () => {
           {/* User Dropdown */}
           <Dropdown menu={{ items: userMenuItems }} overlayClassName="sharp-corner-dropdown">
             <a onClick={(e) => e.preventDefault()}>
-              <Avatar size="large" icon={<UserOutlined />} className="cursor-pointer mx-4" />
+              <Avatar size="large" icon={<UserOutlined />} style={{backgroundColor: isUser ? "#87d068" : ''}} className="cursor-pointer mx-4" />
             </a>
           </Dropdown>
-          <LoginModal/>
-          <SignupModal/>
         </div>
       </div>
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <>
+              {!isUser && <LoginModal />}
+              {!isUser && <SignupModal />}
+            </>)}
     </div>
   );
 };
