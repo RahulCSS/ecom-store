@@ -28,7 +28,11 @@ a{
 }
 
 
-/* Optional: Customize the dropdown items as well */
+
 .sharp-corner-dropdown .ant-dropdown-menu {
   border-radius: 0 !important;  /* Ensure the items inside also have sharp corners */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar  */
 }

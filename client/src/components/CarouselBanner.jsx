@@ -14,7 +14,7 @@ const images = [
 
 const Carouselbanner = () => {
   return (
-    <Carousel autoplay arrows>
+    <Carousel autoplay arrows >
         {images.map((image,index) => (
             <div key={index}>
                 <img src={image}
