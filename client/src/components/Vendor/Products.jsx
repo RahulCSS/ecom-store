@@ -3,7 +3,7 @@ import { Layout, Tabs, Button, Table, Space, Tag, Image, message } from 'antd';
 import { EditTwoTone, DeleteTwoTone, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductModal from './ProductModal'; // assuming this is another component in your project
-import { fetchProduct, clearProduct, showProductModal, editProduct } from '../../store/ProductSlice';
+import { fetchProduct, clearProduct, showProductModal, editProduct, fetchProductsBySeller } from '../../store/ProductSlice';
 import { GetProduct } from '../../apicalls/product';
 
 const { Content, Footer } = Layout;
@@ -26,24 +26,12 @@ const Products = () => {
   const dispatch = useDispatch();
   const vendorId = useSelector((state) => state.user.id);
   const products = useSelector((state) => state.product.fetchProduct);
-  const fetchProductsBySeller = async(Id) =>{
-    try{
-      const response = await GetProduct(Id);
-      if(response.success){
-          message.success(response.message);
-          dispatch(fetchProduct(response.data));
-      }else{
-          message.error(response.message);
-      }
-  }catch(error){
-      message.error(error.message);
-  }
-}
+  
 
   // Fetch products when component mounts
   useEffect(() => {
-    fetchProductsBySeller(vendorId);
-  }, []);
+    dispatch(fetchProductsBySeller(vendorId));
+  }, [dispatch]);
 
   // Filter products based on selected category
   useEffect(() => {
@@ -64,7 +52,7 @@ const Products = () => {
 
   // Refresh handler to fetch all products
   const handleRefresh = () => {
-    fetchProductsBySeller(vendorId);
+    dispatch(fetchProductsBySeller(vendorId));
   };
   
   const onTabChange = (key) => {

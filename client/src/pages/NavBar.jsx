@@ -14,9 +14,9 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [currentKey, setCurrentKey] = useState(null);
-  const user = useSelector((state)=> state.user.userData);
-  const isUser = !!user;
-  const role = useSelector((state)=> state.user.role);
+  const user = useSelector((state)=> state.user);
+  const isUser = !!user.id;
+  const role = user?.role;
   const [loading, setLoading] = useState(false);
 
 
@@ -181,8 +181,12 @@ const NavBar = () => {
 
         {/* User icon & Search bar */}
         <div className="flex items-center gap-2">
-          {role=='Customer' && <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />}
-          {role=='Customer' && <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />}
+          {role==='Customer' && (
+            <>
+              <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
+              <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
+            </>
+          )}
 
           {/* User Dropdown */}
           <Dropdown menu={{ items: userMenuItems }} overlayClassName="sharp-corner-dropdown">

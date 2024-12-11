@@ -28,6 +28,33 @@ const productSlice = createSlice({
     },
 });
 
+export const fetchProducts = () => async (dispatch) => {
+    try {
+      const response = await GetAllProduct();
+      if (response.success) {
+        dispatch(fetchProduct(response.data));
+        message.success(response.message);
+      }else{
+        message.error(response.message);
+      }
+    } catch (error) {
+        message.error(error.message);
+    }
+  };
+  
+  export const fetchProductsBySeller = (id) => async (dispatch) => {
+    try {
+      const response = await GetProduct(id);
+      if (response.success) {
+        dispatch(fetchProduct(response.data));
+        message.success(response.message);
+      }else{
+        message.error(response.message);
+      }
+    } catch (error) {
+        message.error(error.message);
+    }
+  };
 
 export const { showProductModal, hideProductModal, editProduct, clearProduct, fetchProduct } = productSlice.actions;
 export default productSlice.reducer;

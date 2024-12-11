@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Form, Input, Button, InputNumber,Select, Upload, message } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useDispatch, useSelector } from 'react-redux';
-import { hideProductModal, editProduct } from '../../store/ProductSlice';
+import { hideProductModal, editProduct, fetchProductsBySeller } from '../../store/ProductSlice';
 import axios from 'axios';
 import { AddProduct } from '../../apicalls/product';
 
@@ -96,6 +96,7 @@ const ProductModal = () => {
       try {
         dispatch(editProduct({ ...currentProduct, ...formData }));
         message.success('Product updated successfully');
+        dispatch(fetchProductsBySeller(vendorId));
         form.resetFields();
         setFileList([]);
         setImageUrls([]);
@@ -105,10 +106,10 @@ const ProductModal = () => {
     } else {
       // Adding new product
       try {
-        console.log(formData);
         const response = await AddProduct(formData);
         if (response.success) {
           message.success(response.message);
+          dispatch(fetchProductsBySeller(vendorId));
           form.resetFields();
           setFileList([]);
           setImageUrls([]);
@@ -173,7 +174,7 @@ const ProductModal = () => {
             rules={[{ required: true, message: 'Enter product description' }]}>
           <Input.TextArea />
         </Form.Item>
-        <Form.Item name="upload" label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
+        <Form.Item name="upload" label="Upload (max of 5 images)" valuePropName="fileList" getValueFromEvent={normFile}>
           <ImgCrop rotationSlider>
             <Upload
               listType="picture-card"
@@ -189,10 +190,12 @@ const ProductModal = () => {
                 });
               }}
             >
-              <button style={{ background: 'none' }} type="button">
-                <PlusOutlined />
-                <div>Upload</div>
-              </button>
+              {fileList.length < 5 && (
+                <button style={{ background: 'none' }} type="button">
+                  <PlusOutlined />
+                  <div>Upload</div>
+                </button>
+              )}
             </Upload>
           </ImgCrop>
         </Form.Item>
@@ -206,4 +209,4 @@ const ProductModal = () => {
   );
 };
 
-export default ProductModal;
+export default ProductModal; 
