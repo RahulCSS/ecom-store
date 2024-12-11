@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Table, Switch, message, Image} from 'antd';
+import { Tabs, Table, Switch, message, Image, Button} from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts} from "../../store/ProductSlice";
 import { UpdateStatus } from '../../apicalls/product';
@@ -15,7 +16,7 @@ const Sellers = () => {
       const response = await UpdateStatus(product._id, newStatus);
       if (response.success) {
         message.success(`Product status updated to ${newStatus}`);
-        dispatch(fetchProduct()); // Re-fetch products to update the UI
+        dispatch(fetchProducts()); // Re-fetch products to update the UI
       } else {
         message.error('Failed to update product status');
       }
@@ -23,6 +24,11 @@ const Sellers = () => {
       message.error(error.message);
     }
   };
+
+  const handleRefresh = () => {
+    dispatch(fetchProducts());
+  };
+
   const columns = [
     {
       title: 'Product Name',
@@ -33,7 +39,9 @@ const Sellers = () => {
       title: 'Image',
       dataIndex: 'imageUrl',
       key: 'imageUrl',
-      render: (imageUrl) => <Image width={100} src={imageUrl} alt="Product Image" />,
+      render: (imageUrl) => (
+        <Image width={100} src={imageUrl[0]} alt="Product Image" />
+      ),
     },
     {
       title: 'Description',
@@ -90,7 +98,7 @@ const Sellers = () => {
     label: `${groupedProducts[sellerId].name}`,
     children: (
       <>
-        <h2>Products by {groupedProducts[sellerId].name}</h2>
+        <h2>Products from {groupedProducts[sellerId].name}</h2>
         <Table
           columns={columns}
           dataSource={groupedProducts[sellerId].products}
@@ -109,8 +117,8 @@ const Sellers = () => {
   useEffect(() => {
     if (products) {
       const groupBySeller = products.reduce((acc, product) => {
-        const sellerId = product.sellerId._id;
-        const sellerName = product.sellerId.name;
+        const sellerId = product.vendor_Id._id;
+        const sellerName = product.vendor_Id.name;
 
         if (!acc[sellerId]) {
           acc[sellerId] = { name: sellerName, products: [] };
@@ -124,9 +132,18 @@ const Sellers = () => {
     }
   }, [products]);
   return (
-    <Tabs defaultActiveKey="0" items={items} >
-    
-    </Tabs>
+    <>
+      <Button 
+            type="default" 
+            icon={<ReloadOutlined />} 
+            onClick={handleRefresh}
+          >
+            Refresh Products
+      </Button>
+      <Tabs defaultActiveKey="0" items={items} >
+      
+      </Tabs>
+    </>
   )
 }
 

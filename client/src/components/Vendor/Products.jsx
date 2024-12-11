@@ -3,8 +3,7 @@ import { Layout, Tabs, Button, Table, Space, Tag, Image, message } from 'antd';
 import { EditTwoTone, DeleteTwoTone, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductModal from './ProductModal'; // assuming this is another component in your project
-import { fetchProduct, clearProduct, showProductModal, editProduct, fetchProductsBySeller } from '../../store/ProductSlice';
-import { GetProduct } from '../../apicalls/product';
+import { clearProduct, showProductModal, editProduct, fetchProductsBySeller } from '../../store/ProductSlice';
 
 const { Content, Footer } = Layout;
 
