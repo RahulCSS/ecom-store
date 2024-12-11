@@ -3,21 +3,50 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
     name:'user',
     initialState: {
-        userData: null,
-        role: null
+        id: null,
+        name: null,
+        email: null,
+        phone_number: null,
+        address: null,
+        role: null,
+        status: null,
+        token: null,
+        wishlist: null,
+        cart: null,
     },
     reducers:{
         setUserRole: (state,action) => {
             state.role = action.payload;
         },
+        clearUserRole: (state) => {
+            state.role = null;
+        },
         setUser: (state,action) => {
-            state.userData = action.payload;
+            state.id = action.payload._id;
+            state.name = action.payload.name;
+            state.email = action.payload.email;
+            state.phone_number = action.payload.phone_number;
+            state.address = action.payload.address;
+            state.role = action.payload.role;
+            state.status = action.payload.status;
+            state.token = action.payload.token;
+            state.wishlist = action.payload.wishlist;
+            state.cart = action.payload.cart;
         },
         clearUser: (state) => {
-            state.userData = null;
+            state.id = null;
+            state.name = null;
+            state.email = null;
+            state.phone_number = null;
+            state.address = null;
+            state.role = null;
+            state.status = null;
+            state.token = null;
+            state.wishlist = null;
+            state.cart = null;
         },
     },
 });
 
-export const { setUserRole, setUser, clearUser } = userSlice.actions;
+export const { setUserRole,clearUserRole, setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

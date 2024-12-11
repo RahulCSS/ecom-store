@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.705.0",
     "@reduxjs/toolkit": "^2.4.0",
     "antd": "^5.22.2",
+    "antd-img-crop": "^4.23.0",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

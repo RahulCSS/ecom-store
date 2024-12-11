@@ -1,8 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import { connection } from './config/dbConfig.js'
-import { userRouter } from './route/userRoute.js'
-
+import { userRoute } from './route/userRoute.js'
+import { productRoute } from './route/productRoute.js'
+import { uploadRoute } from './route/uploadRoute.js'
 import 'dotenv/config'
 
 // Configuration
@@ -10,14 +11,16 @@ const app = express();
 const port = 8082;
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Database Connection
 connection();
 
 // API's
-app.use("/api/user",userRouter);
+app.use("/api/user",userRoute);
+app.use("/api/product",productRoute);
+app.use('/api/upload', uploadRoute);
 
 
 app.listen(port,() =>{

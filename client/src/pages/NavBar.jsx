@@ -3,7 +3,7 @@ import { Avatar, Menu, Dropdown, message, Spin } from 'antd';
 import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined} from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux'
 import { showLoginModal,showSignupModal} from '../store/ModalSlice'
-import { setUserRole, setUser, clearUser } from '../store/UserSlice';
+import { setUserRole, clearUserRole, setUser, clearUser } from '../store/UserSlice';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
@@ -16,6 +16,7 @@ const NavBar = () => {
   const [currentKey, setCurrentKey] = useState(null);
   const user = useSelector((state)=> state.user.userData);
   const isUser = !!user;
+  const role = useSelector((state)=> state.user.role);
   const [loading, setLoading] = useState(false);
 
 
@@ -45,6 +46,7 @@ const NavBar = () => {
   const logout = () => {
     localStorage.removeItem("token");
     dispatch(clearUser());
+    dispatch(clearUserRole());
     message.info({
       content: "You have been logged out successfully!",
       style: {
@@ -98,10 +100,10 @@ const NavBar = () => {
   const userMenuItems = [
     { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
     { type: 'divider' },
-    { key: 'myaccount', label: 'My Account', icon: <UserOutlined />, },
-    { key: 'orders', label: 'Orders' ,icon: <ProfileOutlined />},
-    { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> },
-    { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> },
+    { key: 'myaccount', label: role === 'Customer' ? '' : 'My Account', icon: role === 'Customer' ? '' : <UserOutlined />, },
+    { key: 'orders', label: role === 'Customer' ? '' : 'Orders' ,icon: role === 'Customer' ? '' : <ProfileOutlined />},
+    { key: 'wishlist', label: role === 'Customer' ? '' : 'Wishlist', icon: role === 'Customer' ? '' : <HeartOutlined /> },
+    { key: 'coupons', label: role === 'Customer' ? '' : 'Coupons', icon: role === 'Customer' ? '' : <GiftOutlined /> },
     { key:'becomeseller', label: isUser ? 'Logout' : renderMenuLabel('Become a Seller/Delivery'), 
                                 icon: isUser ? <LogoutOutlined /> : '', onClick: isUser ? logout : null},
                                 
@@ -135,7 +137,7 @@ const NavBar = () => {
     }
   };
 
-
+  
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -144,6 +146,16 @@ const NavBar = () => {
       navigate('/');
     }
   },[]);
+
+  useEffect(() => {
+    if (role === 'Admin') {
+        navigate('/admin');
+    } else if (role === 'Vendor') {
+        navigate('/vendor');
+    } else if (role === 'Delivery') {
+        navigate('/delivery');
+    }
+},[role]);
 
   return (
     <div >
@@ -156,7 +168,7 @@ const NavBar = () => {
         </div>
 
         {/* Menu in the center */}
-        <div className='w-full'>
+        {role =='Customer' &&<div className='w-full'>
           <Menu
             selectedKeys={[currentKey]}
             mode="horizontal"
@@ -165,12 +177,12 @@ const NavBar = () => {
             onMouseOut={handleMouseOut}
             style={{ fontSize: '1rem', justifyContent: 'center'}}
           />
-        </div>
+        </div>}
 
         {/* User icon & Search bar */}
         <div className="flex items-center gap-2">
-          <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
-          <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
+          {role=='Customer' && <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />}
+          {role=='Customer' && <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />}
 
           {/* User Dropdown */}
           <Dropdown menu={{ items: userMenuItems }} overlayClassName="sharp-corner-dropdown">

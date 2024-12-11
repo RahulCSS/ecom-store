@@ -10,7 +10,6 @@ const SignupModal = () => {
     const userRole = useSelector((state) => state.user.role);
     const visible = useSelector((state) => state.modal.isSignupModalOpen);
     //console.log('Signup-'+visible);
-    console.log(userRole);
 
     const [form] = Form.useForm();
     const handleRegisterClick = () => {

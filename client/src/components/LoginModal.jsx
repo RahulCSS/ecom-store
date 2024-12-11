@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { hideLoginModal, showSignupModal} from '../store/ModalSlice'
 import {Link} from 'react-router-dom'
 import { LoginUser } from '../apicalls/user'
-import { setUser } from '../store/UserSlice'
+import { setUser, setUserRole } from '../store/UserSlice'
 
 const LoginModal = () => {
     const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const LoginModal = () => {
                 message.success(response.message);
                 localStorage.setItem('token', response.userData.token);
                 dispatch(setUser(response.userData));
+                dispatch(setUserRole(response.userData.role));
             }else{
                 message.error(response.message);
                 //console.error(response.message);
