@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Input, Table, message, Button ,Row, Col, Image } from 'antd';
+import { Input, Table, message, Button, Row, Col, Image } from 'antd';
 const { Search } = Input;
-import { fetchProduct} from "../../store/ProductSlice";
+import { fetchProducts } from "../../store/ProductSlice";
 
 const Products = () => {
   const dispatch = useDispatch();
-  const products = useSelector(state=> state.products.fetchProduct);
+  const products = useSelector((state) => state.product.fetchProduct);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const columns = [
     {
       title: 'Product Name',
@@ -21,7 +21,9 @@ const Products = () => {
       title: 'Image',
       dataIndex: 'imageUrl',
       key: 'imageUrl',
-      render: (imageUrl) => <Image width={100} src={imageUrl} alt="Product Image" />,
+      render: (imageUrl) => (
+        <Image width={100} src={imageUrl[0]} alt="Product Image" />
+      ),
     },
     {
       title: 'Description',
@@ -34,9 +36,9 @@ const Products = () => {
       key: 'category',
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: 'Sub-Category',
+      dataIndex: 'subcategory',
+      key: 'subcategory', 
     },
     {
       title: 'Price',
@@ -50,6 +52,12 @@ const Products = () => {
       key: 'stock',
     },
     {
+      title: 'Vendor',
+      dataIndex: 'vendor_Id', 
+      key: 'vendor_Id', 
+      render: (vendorId) => vendorId ? vendorId.name : 'N/A',
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
@@ -57,7 +65,11 @@ const Products = () => {
         <span
           style={{
             color:
-              status === 'pending' ? 'orange' : status === 'approved' ? 'green' : 'red',
+              status === 'pending'
+                ? 'orange'
+                : status === 'approved'
+                ? 'green'
+                : 'red',
           }}
         >
           {status}
@@ -67,7 +79,6 @@ const Products = () => {
   ];
 
   //* Handlers
-  // Handle search input
   const handleSearchChange = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchText(value);
@@ -76,17 +87,17 @@ const Products = () => {
     );
     setFilteredProducts(filtered);
   };
+
   // Handle show all products
   const onShowAll = () => {
-    setFilteredProducts(products); // Reset to show all products
+    setFilteredProducts(products); 
   };
 
   //* State
-  // Fetch all products by seller once when this component mounts
   useEffect(() => {
-    dispatch(fetchProducts());
-    setFilteredProducts(products);
-  }, [dispatch]);
+    dispatch(fetchProducts());  
+    setFilteredProducts(products); 
+  }, [dispatch]);  
 
   return (
     <div>
@@ -115,4 +126,4 @@ const Products = () => {
   );
 };
 
-export default Products
+export default Products;

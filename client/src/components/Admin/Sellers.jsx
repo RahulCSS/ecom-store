@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Table, Switch, message, Image} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProduct} from "../../store/ProductSlice";
+import { fetchProducts} from "../../store/ProductSlice";
 import { UpdateStatus } from '../../apicalls/product';
 const Sellers = () => {
   const dispatch = useDispatch();
-  const products = useSelector(state=> state.products.fetchProduct);
+  const products = useSelector(state=> state.product.fetchProduct);
   const [groupedProducts, setGroupedProducts] = useState({});
   
   //* API
@@ -107,7 +107,7 @@ const Sellers = () => {
 
 
   useEffect(() => {
-    if (products.length) {
+    if (products) {
       const groupBySeller = products.reduce((acc, product) => {
         const sellerId = product.sellerId._id;
         const sellerName = product.sellerId.name;

@@ -23,7 +23,7 @@ const addProduct = async (req,res) =>{
 // Fetch all products
 const getAllProduct = async (req, res) =>{
     try{
-        const products = await productModel.find().populate('sellerId', 'name');;
+        const products = await productModel.find().populate('vendor_Id', 'name');;
         res.json({success:true, message: "Products fetched successfully", data: products}) ;
     }catch(error){
         console.log(error);
