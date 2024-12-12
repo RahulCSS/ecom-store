@@ -14,14 +14,22 @@ const images = [
 
 const categories = [
                     {name:"Phones",image:images[0]},
-                    {name:"Laptop",image:images[1]},
-                    {name:"Books",image:images[2]},
-                    {name:"Medicine",image:images[3]},
-                    {name:"Fruits",image:images[4]},
-                    {name:"Vegitables",image:images[5]},
+                    {name:"Laptops",image:images[1]},
                     {name:"Clothing",image:images[6]},
-                    {name:"Notebook",image:images[7]},
-                    {name:"Skincare",image:images[8]},
+                    {name:"Footwear",image:images[8]},
+                    {name:"Television",image:images[2]},
+                    {name:"Air Conditioner",image:images[3]},
+                    {name:"Refrigirator",image:images[3]},
+                    {name:"Fruits & Vegetables",image:images[4]},
+                    {name:"Snacks",image:images[4]},
+                    {name:"Beverages",image:images[5]},
+                    {name:"Skincare",image:images[7]},
+                    {name:"Haircare",image:images[7]},
+                    {name:"Bath & Body",image:images[7]},
+                    {name:"Books",image:images[7]},
+                    {name:"Office Supplies",image:images[7]},
+                    {name:"Fitness",image:images[7]},
+                    {name:"Supplements",image:images[7]},
 ];
 
 const Categorybelt = () => {

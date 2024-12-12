@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Tabs, Button, Table, Space, Tag, Image, message } from 'antd';
+import { Layout, Tabs, Button, Table, Space, Tag, Image, message, Popconfirm } from 'antd';
 import { EditTwoTone, DeleteTwoTone, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductModal from './ProductModal'; // assuming this is another component in your project
 import { clearProduct, showProductModal, editProduct, fetchProductsBySeller } from '../../store/ProductSlice';
+import { DeleteProduct } from '../../apicalls/product';
 
 const { Content, Footer } = Layout;
 
 const categories = [
   'Electronics',
   'Fashion',
-  'Appliances',
+  'Appliance',
   'Home & Furniture',
   'Groceries',
   'Beauty',
   'Toys',
-  'Stationary',
+  'Stationery',
   'Health'
 ];
 
@@ -45,14 +46,32 @@ const Products = () => {
     dispatch(clearProduct());
     dispatch(showProductModal());
   };
+
   const editProductHandler = (product) => {
     dispatch(editProduct(product));
+    dispatch(showProductModal());
+  };
+
+  const handleDelete = async(product) =>{
+    try{
+      const response = await DeleteProduct(product._id);
+      if(response.success){
+          message.success(response.message);
+          dispatch(fetchProductsBySeller(vendorId))
+      }else{
+          message.error(response.message);
+      }
+    }catch(error){
+      message.error(error.message);
+    }
   };
 
   // Refresh handler to fetch all products
   const handleRefresh = () => {
     dispatch(fetchProductsBySeller(vendorId));
+    
   };
+
   
   const onTabChange = (key) => {
     setSelectedCategory(key); 
@@ -100,7 +119,15 @@ const Products = () => {
       render: (_, record) => (
         <Space>
           <Button onClick={() => editProductHandler(record)} icon={<EditTwoTone />} />
+          <Popconfirm
+            title="Delete the product"
+            description="Are you sure to remove this product from store?"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => handleDelete(record)}
+          >
           <Button icon={<DeleteTwoTone twoToneColor="#FF4D4F" />} />
+          </Popconfirm>
         </Space>
       ),
     },

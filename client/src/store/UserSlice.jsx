@@ -13,13 +13,14 @@ const userSlice = createSlice({
         token: null,
         wishlist: null,
         cart: null,
+        userRole: null,
     },
     reducers:{
         setUserRole: (state,action) => {
-            state.role = action.payload;
+            state.userRole = action.payload;
         },
         clearUserRole: (state) => {
-            state.role = null;
+            state.userRole = null;
         },
         setUser: (state,action) => {
             state.id = action.payload._id;

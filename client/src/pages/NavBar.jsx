@@ -168,7 +168,8 @@ const NavBar = () => {
         </div>
 
         {/* Menu in the center */}
-        {role =='Customer' &&<div className='w-full'>
+        {(role ==='Customer' || role === null) && 
+        <div className='w-full'>
           <Menu
             selectedKeys={[currentKey]}
             mode="horizontal"
@@ -181,7 +182,7 @@ const NavBar = () => {
 
         {/* User icon & Search bar */}
         <div className="flex items-center gap-2">
-          {role==='Customer' && (
+          {(role ==='Customer' || role === null) && (
             <>
               <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
               <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />

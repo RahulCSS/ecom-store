@@ -27,11 +27,11 @@ const ProductModal = () => {
   const { currentProduct } = useSelector((state) => state.product);
 
   const category = [ "Electronics", "Fashion","Appliance", "Home & Furiture", "Grocery", 
-    "Beauty", "Toys", "Stationary", "Health"];
+    "Beauty", "Toys", "Stationery", "Health"];
   const categoryToSubcategories = {
     Electronics: ["Phones", "Laptops", "Cameras", "Accessories"],
     Fashion: ["Clothing", "Footwear", "Jewelry", "Accessories"],
-    Appliance: [ "Decor", "Kitchenware", "Bedding"],
+    Appliance: [ "Television", "Air Conditioner", "Refrigirator"],
     'Home & Furniture': ["Air Conditioner","Refrigirator","Television","PlayStation"],
     Grocery: ["Fruits & Vegetables", "Dairy", "Snacks", "Beverages","Canned Goods", "Frozen Foods", "Condiments", "Baking Supplies"],
     Beauty: ["Skincare", "Haircare", "Bath & Body", "Aroma"],
