@@ -65,7 +65,7 @@ const Categorybelt = () => {
 
   return (
     <div className='bg-white mb-2'>
-        <h2 className="pt-2 text-[1.5rem]">What's on your Mind</h2>
+        <h2 className="pt-2 pl-6 text-[1.5rem]">What's on your Mind</h2>
         <div className="relative flex overflow-x-auto py-2 hide-scrollbar"
                 ref={scrollContainerRef}
                 onMouseDown={handleMouseDown}

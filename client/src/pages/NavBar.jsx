@@ -127,11 +127,11 @@ const NavBar = () => {
         dispatch(setUser(response.data));
       } else {
         message.error(response.message);
-        clearUser();
+        dispatch(clearUser());
       }
     } catch (error) {
       message.error('Failed to fetch user data, please try again later');
-      clearUser();
+      dispatch(clearUser());
     }finally {
       setLoading(false);
     }

@@ -13,7 +13,7 @@ const categories = [
   'Fashion',
   'Appliance',
   'Home & Furniture',
-  'Groceries',
+  'Grocery',
   'Beauty',
   'Toys',
   'Stationery',

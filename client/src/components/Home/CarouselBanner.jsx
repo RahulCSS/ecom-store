@@ -14,15 +14,28 @@ const images = [
 
 const Carouselbanner = () => {
   return (
-    <Carousel autoplay arrows >
-        {images.map((image,index) => (
+    <div className="flex justify-between items-center w-full">
+      
+      <div className="w-[70%]">
+        <Carousel autoplay arrows>
+          {images.map((image, index) => (
             <div key={index}>
-                <img src={image}
-                    className="object-contain w-[100%] h-[16rem] text-center "/>
-            </div> 
-        ))}
-    </Carousel>
-  )
+              <img
+                src={image}
+                alt={`carousel-image-${index}`}
+                className="object-cover w-full h-[16rem]"
+              />
+            </div>
+          ))}
+        </Carousel>
+      </div>
+
+      
+      <div className="w-[30%] h-[16rem] bg-gray-300 flex justify-center items-center">
+        <div className="text-center text-white font-bold">Poster Content</div>
+      </div>
+    </div>
+  );
 }
 
 export default Carouselbanner
