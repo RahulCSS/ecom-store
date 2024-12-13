@@ -8,6 +8,7 @@ import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
 import { Link, useNavigate } from 'react-router-dom';
+import { fetchProducts } from '../store/ProductSlice';
 
 
 const NavBar = () => {
@@ -18,7 +19,7 @@ const NavBar = () => {
   const isUser = !!user.id;
   const role = user?.role;
   const [loading, setLoading] = useState(false);
-
+ const products = useSelector((state) => state.product.fetchProduct);
 
   
   const showLogin =()=>{
@@ -148,6 +149,7 @@ const NavBar = () => {
   },[]);
 
   useEffect(() => {
+    dispatch(fetchProducts());
     if (role === 'Admin') {
         navigate('/admin');
     } else if (role === 'Vendor') {

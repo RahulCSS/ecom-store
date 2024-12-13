@@ -25,7 +25,7 @@ const OfferZone = () => {
   ];
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className='pb-[20px]'>
       {/* Main Container for the 3 large cards */}
       <Row gutter={[12, 16]}> {/* 16px horizontal and 24px vertical spacing */}
         {/* First Main Card */}

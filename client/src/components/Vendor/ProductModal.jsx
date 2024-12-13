@@ -30,9 +30,9 @@ const ProductModal = () => {
     "Beauty", "Toys", "Stationery", "Health"];
   const categoryToSubcategories = {
     Electronics: ["Phones", "Laptops", "Cameras", "Accessories"],
-    Fashion: ["Clothing", "Footwear", "Jewelry", "Accessories"],
+    Fashion: ["Clothing", "Footwear", "Jewelry", "Styling"],
     Appliance: [ "Television", "Air Conditioner", "Refrigirator"],
-    'Home & Furniture': ["Air Conditioner","Refrigirator","Television","PlayStation"],
+    'Home & Furniture': ["Sofa","Chair","Table","Clock"],
     Grocery: ["Fruits & Vegetables", "Dairy", "Snacks", "Beverages","Canned Goods", "Frozen Foods", "Condiments", "Baking Supplies"],
     Beauty: ["Skincare", "Haircare", "Bath & Body", "Aroma"],
     Toys: ["Video Games", "Kids Toys", "Cars"],

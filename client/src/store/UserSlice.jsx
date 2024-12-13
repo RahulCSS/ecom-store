@@ -11,8 +11,8 @@ const userSlice = createSlice({
         role: null,
         status: null,
         token: null,
-        wishlist: null,
-        cart: null,
+        wishlist: [],
+        cart: [],
         userRole: null,
     },
     reducers:{
@@ -43,11 +43,13 @@ const userSlice = createSlice({
             state.role = null;
             state.status = null;
             state.token = null;
-            state.wishlist = null;
-            state.cart = null;
+            state.wishlist = [];
+            state.cart = [];
         },
     },
 });
+
+
 
 export const { setUserRole,clearUserRole, setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;
