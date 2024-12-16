@@ -1,12 +1,14 @@
-import React, { useRef } from 'react';
-import { Card, Button, Layout } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react';
+import { Card, Button, Layout, FloatButton } from 'antd';
+import { LeftOutlined, RightOutlined, HeartOutlined, ShoppingCartOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { addremoveWish, addtoCart, removefromCart } from '../../store/UserSlice';
 
 const { Meta } = Card;
 const { Header, Content } = Layout;
 
 const ProductCategory = ({ category, product }) => {
+  const dispatch = useDispatch();
   const scrollContainerRef = useRef(null);
 
   const handleScroll = (direction) => {
@@ -20,61 +22,73 @@ const ProductCategory = ({ category, product }) => {
     }
   };
 
+  const handleAddRemoveWish = (id) => {
+    dispatch(addremoveWish(id));
+  };
+
+  const handleAddtoCart = (id) => {
+    dispatch(addtoCart(id));
+  };
+
+  const handleRemovefromCart = (id) => {
+    dispatch(removefromCart(id));
+  }
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ backgroundColor: 'white', fontSize: '2rem' }}>
+    <Layout className="min-h-screen">
+      <Header className="bg-white text-2xl">
         {category}
       </Header>
-      <Content style={{ paddingRight: '20px', paddingLeft: '20px', backgroundColor: 'white' }}>
+      <Content className="px-5 bg-white">
         {Object.keys(product).map((subcategory) => {
           const productsInSubcategory = product[subcategory];
 
           return (
-            <div
-              key={subcategory}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                marginBottom: '30px',
-              }}
-            >
+            <div key={subcategory} className="flex items-center justify-center relative mb-8">
               {/* Left Arrow */}
               <Button
                 icon={<LeftOutlined />}
                 onClick={() => handleScroll('left')}
-                style={{
-                  position: 'absolute',
-                  left: '0',
-                  zIndex: 1,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  color: 'white',
-                }}
+                className="absolute left-0 z-10 bg-black bg-opacity-50 text-white"
               />
 
               {/* Scrollable Container for Cards */}
               <div
                 ref={scrollContainerRef}
-                style={{
-                  display: 'flex',
-                  overflowX: 'auto',
-                  whiteSpace: 'nowrap',
-                  gap: '16px',
-                  padding: '16px 0',
-                  width: '100%', 
-                  scrollBehavior: 'smooth',
-                }}
+                className="flex overflow-x-auto whitespace-nowrap gap-4 py-4 w-full scroll-smooth"
               >
                 {productsInSubcategory.map((productItem, index) => (
-                  <Card
-                    key={index}
-                    style={{ width: '220px', height: '400px', flexShrink: 1 }} 
-                    cover={<img alt={productItem.name} src={productItem.imageUrl[0]} />}
-                  >
-                    <Meta title={<div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>{productItem.name}</div>} 
-                    description={`₹${productItem.price}`} />
-                  </Card>
+                  <div key={index} className="relative w-56 h-96">
+                    <Card
+                      hoverable
+                      className="w-full h-full flex-shrink-0"
+                      cover={<img alt={productItem.name} src={productItem.imageUrl[0]} />}
+                    >
+                      <Meta
+                        title={<div className="text-sm break-words">{productItem.name}</div>}
+                        description={`₹${productItem.price}`}
+                      />
+                    </Card>
+
+                    {/* Floating Heart (Wishlist) Button */}
+                    <FloatButton
+                      icon={<HeartOutlined />}
+                      className="absolute top-2 right-2 z-10 bg-red-500 text-white"
+                      shape="circle"
+                      onClick={() => handleAddRemoveWish(productItem._id)}
+                    />
+
+                    {/* Floating Shopping Cart (Add to Cart) Button with Hover Effect */}
+                    <FloatButton.Group
+                      trigger="hover"
+                      className="absolute  bottom-2 right-2 z-10"
+                      shape="circle"
+                      icon={<ShoppingCartOutlined />}
+                    >
+                      <FloatButton icon={<MinusOutlined />} onClick={() => handleRemovefromCart(productItem._id)}/>
+                      <FloatButton icon={<PlusOutlined />} onClick={() => handleAddtoCart(productItem._id)}/>
+                    </FloatButton.Group>
+                  </div>
                 ))}
               </div>
 
@@ -82,13 +96,7 @@ const ProductCategory = ({ category, product }) => {
               <Button
                 icon={<RightOutlined />}
                 onClick={() => handleScroll('right')}
-                style={{
-                  position: 'absolute',
-                  right: '0',
-                  zIndex: 1,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  color: 'white',
-                }}
+                className="absolute right-0 z-10 bg-black bg-opacity-50 text-white"
               />
             </div>
           );

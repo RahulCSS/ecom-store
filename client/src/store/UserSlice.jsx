@@ -14,6 +14,8 @@ const userSlice = createSlice({
         wishlist: [],
         cart: [],
         userRole: null,
+        userWish:[],
+        userCart:[],
     },
     reducers:{
         setUserRole: (state,action) => {
@@ -46,10 +48,45 @@ const userSlice = createSlice({
             state.wishlist = [];
             state.cart = [];
         },
+        addremoveWish : (state,action) => { 
+            const id = action.payload;
+            const existing = state.userWish.find(item => item.id === id);
+            if (existing) {
+                state.userWish = state.userWish.filter((item) => item.id!== id);
+            } else {
+                state.userWish = [...state.userWish, {id}];
+            }
+        },
+
+        addtoCart: (state, action) => {
+            const id = action.payload;
+            const existingProduct= state.userCart.find(item => item.id === id);
+
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                state.userCart.push({ id, quantity: 1 });
+            }
+        },
+        removefromCart: (state, action) => {
+            const id = action.payload;
+            const existingProduct= state.userCart.find(item => item.id === id);
+            if (existingProduct && existingProduct.quantity > 1) {
+                existingProduct.quantity -= 1;
+            }else{
+                state.userCart = state.userCart.filter(item => item.id !== action.payload);
+            }
+        },
+        DeletefromCart: (state, action) => {
+            
+        },
+        EmptyCart: (state) => {
+            state.userCart = [];
+        },
     },
 });
 
 
 
-export const { setUserRole,clearUserRole, setUser, clearUser } = userSlice.actions;
+export const { setUserRole,clearUserRole, setUser, clearUser, addremoveWish, addtoCart, removefromCart, DeletefromCart, EmptyCart } = userSlice.actions;
 export default userSlice.reducer;
