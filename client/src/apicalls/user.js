@@ -35,3 +35,21 @@ export const GetCurrentUser = async () => {
         return err;
     }
 };
+
+export const UpdateCart = async (id, payload) => {
+    try{
+        const response = await axiosInstance.put(`/api/user/updatecart/${id}`,{cart : payload});
+        return response.data;
+    }catch(err){
+        return err;
+    }
+};
+
+export const UpdateWishlist = async (id, payload) => {
+    try{
+        const response = await axiosInstance.put(`/api/user/updatewishlist/${id}`,{wishlist : payload});
+        return response.data;
+    }catch(err){
+        return err;
+    }
+};

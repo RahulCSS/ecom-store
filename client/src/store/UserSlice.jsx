@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { UpdateCart, UpdateWishlist} from "../apicalls/user";
 
 const userSlice = createSlice({
     name:'user',
@@ -14,8 +15,6 @@ const userSlice = createSlice({
         wishlist: [],
         cart: [],
         userRole: null,
-        userWish:[],
-        userCart:[],
     },
     reducers:{
         setUserRole: (state,action) => {
@@ -49,44 +48,73 @@ const userSlice = createSlice({
             state.cart = [];
         },
         addremoveWish : (state,action) => { 
-            const id = action.payload;
-            const existing = state.userWish.find(item => item.id === id);
+            const productId = action.payload;
+            const existing = state.wishlist.find(item => item.toString() === productId);
             if (existing) {
-                state.userWish = state.userWish.filter((item) => item.id!== id);
+                state.wishlist = state.wishlist.filter((item) => item.toString() !== productId);
             } else {
-                state.userWish = [...state.userWish, {id}];
+                state.wishlist.push(productId); 
             }
+            UpdateWishlist(state.id, state.wishlist);
         },
 
         addtoCart: (state, action) => {
-            const id = action.payload;
-            const existingProduct= state.userCart.find(item => item.id === id);
-
+            const productId = action.payload;
+            const existingProduct = state.cart.find(item => item.productId.toString() === productId);
             if (existingProduct) {
                 existingProduct.quantity += 1;
             } else {
-                state.userCart.push({ id, quantity: 1 });
+                state.cart.push({ productId, quantity: 1 });
             }
+            UpdateCart(state.id, state.cart); 
         },
         removefromCart: (state, action) => {
-            const id = action.payload;
-            const existingProduct= state.userCart.find(item => item.id === id);
+            const productId = action.payload;
+            const existingProduct= state.cart.find(item => item.id === productId);
             if (existingProduct && existingProduct.quantity > 1) {
                 existingProduct.quantity -= 1;
             }else{
-                state.userCart = state.userCart.filter(item => item.id !== action.payload);
+                state.cart = state.cart.filter(item => item.id !== action.payload);
             }
+            UpdateCart(state.id, state.cart); 
         },
         DeletefromCart: (state, action) => {
-            
+            const productId = action.payload;
+            state.cart = state.cart.filter(item => item.productId.toString() !== productId);
+            UpdateCart(state.id, state.cart); 
         },
         EmptyCart: (state) => {
-            state.userCart = [];
+            state.cart = [];
+            UpdateCart(state.id, state.cart);
         },
     },
 });
 
+export const updateCart = (id,payload) => async (dispatch) => {
+    try {
+      const response = await UpdateCart(id, payload);
+      if (response.success) {
+        message.success(response.message);
+      }else{
+        message.error(response.message);
+      }
+    } catch (error) {
+        message.error(error.message);
+    }
+};
 
+export const updateWishlist = (id,payload) => async (dispatch) => {
+    try {
+      const response = await UpdateWishlist(id,payload);
+      if (response.success) {
+        message.success(response.message);
+      }else{
+        message.error(response.message);
+      }
+    } catch (error) {
+        message.error(error.message);
+    }
+  };
 
 export const { setUserRole,clearUserRole, setUser, clearUser, addremoveWish, addtoCart, removefromCart, DeletefromCart, EmptyCart } = userSlice.actions;
 export default userSlice.reducer;

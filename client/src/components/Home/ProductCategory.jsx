@@ -1,16 +1,22 @@
 import React, { useRef, useState } from 'react';
 import { Card, Button, Layout, FloatButton } from 'antd';
-import { LeftOutlined, RightOutlined, HeartOutlined, ShoppingCartOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { addremoveWish, addtoCart, removefromCart } from '../../store/UserSlice';
+import { LeftOutlined, RightOutlined, HeartTwoTone, HeartOutlined, ShoppingCartOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { addremoveWish, addtoCart, removefromCart, updateCart, updateWishlist } from '../../store/UserSlice';
 
 const { Meta } = Card;
 const { Header, Content } = Layout;
 
 const ProductCategory = ({ category, product }) => {
   const dispatch = useDispatch();
+  const cart = useSelector(state => state.user.cart); 
+  const wishlist = useSelector(state => state.user.wishlist);
+  const user = useSelector(state => state.user);
+  const isUser = !!user.id;
+
   const scrollContainerRef = useRef(null);
 
+  // Handle scrolling through the product list
   const handleScroll = (direction) => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -22,17 +28,23 @@ const ProductCategory = ({ category, product }) => {
     }
   };
 
+  // Check if a product is in the wishlist
+  const checkIfWished = (id) => Array.isArray(wishlist) && wishlist.includes(id);
+  
+  // Handle adding/removing from wishlist
   const handleAddRemoveWish = (id) => {
     dispatch(addremoveWish(id));
   };
 
+  // Handle adding to cart
   const handleAddtoCart = (id) => {
     dispatch(addtoCart(id));
   };
 
+  // Handle removing from cart
   const handleRemovefromCart = (id) => {
     dispatch(removefromCart(id));
-  }
+  };
 
   return (
     <Layout className="min-h-screen">
@@ -57,39 +69,64 @@ const ProductCategory = ({ category, product }) => {
                 ref={scrollContainerRef}
                 className="flex overflow-x-auto whitespace-nowrap gap-4 py-4 w-full scroll-smooth"
               >
-                {productsInSubcategory.map((productItem, index) => (
-                  <div key={index} className="relative w-56 h-96">
-                    <Card
-                      hoverable
-                      className="w-full h-full flex-shrink-0"
-                      cover={<img alt={productItem.name} src={productItem.imageUrl[0]} />}
-                    >
-                      <Meta
-                        title={<div className="text-sm break-words">{productItem.name}</div>}
-                        description={`₹${productItem.price}`}
+                {productsInSubcategory.map((productItem, index) => {
+                  
+                  const isWished = checkIfWished(productItem._id);
+                  const cartItem = Array.isArray(cart) ? cart.find(item => item.id === productItem._id) : null;
+                  const cartQuantity = cartItem ? cartItem.quantity : 0;
+                  console.log(user);
+                  console.log(cart);
+                  console.log(cartItem);
+                  console.log(cartQuantity);
+
+                  return (
+                    <div key={index} className="relative w-56 h-96">
+                      <Card
+                        hoverable
+                        className="w-full h-full flex-shrink-0"
+                        cover={<img alt={productItem.name} src={productItem.imageUrl[0]} />}
+                      >
+                        <Meta
+                          title={<div className="text-sm break-words truncate">{productItem.name}</div>}
+                          description={`₹${productItem.price}`}
+                        />
+                      </Card>
+
+                      {/* Floating Heart (Wishlist) Button */}
+                      <FloatButton
+                        icon={isUser && isWished ? <HeartTwoTone twoToneColor="#eb2f96" /> : <HeartOutlined />}
+                        className="absolute top-2 right-2 z-10 bg-red-500 text-white"
+                        shape="circle"
+                        tooltip={isUser ? (isWished ? 'Remove from Wishlist' : 'Add to Wishlist') : 'Login to save wishlist'}
+                        onClick={() => handleAddRemoveWish(productItem._id)}
                       />
-                    </Card>
 
-                    {/* Floating Heart (Wishlist) Button */}
-                    <FloatButton
-                      icon={<HeartOutlined />}
-                      className="absolute top-2 right-2 z-10 bg-red-500 text-white"
-                      shape="circle"
-                      onClick={() => handleAddRemoveWish(productItem._id)}
-                    />
+                      {/* Floating Shopping Cart (Add to Cart) Button with Hover Effect */}
+                      <FloatButton.Group
+                        trigger="hover"
+                        className="absolute bottom-2 right-2 z-10"
+                        shape="circle"
+                        icon={<ShoppingCartOutlined />}
+                        tooltip={isUser ? '':'Login to save Cart'}
+                        badge={cartQuantity > 0 ? { count: cartQuantity, showZero: false } : null}
+                      >
+                        {/* Minus Button (Remove from Cart) */}
+                        {cartQuantity > 0 && (
+                          <FloatButton
+                            icon={<MinusOutlined />}
+                            onClick={() => handleRemovefromCart(productItem._id)}
+                          />
+                        )}
 
-                    {/* Floating Shopping Cart (Add to Cart) Button with Hover Effect */}
-                    <FloatButton.Group
-                      trigger="hover"
-                      className="absolute  bottom-2 right-2 z-10"
-                      shape="circle"
-                      icon={<ShoppingCartOutlined />}
-                    >
-                      <FloatButton icon={<MinusOutlined />} onClick={() => handleRemovefromCart(productItem._id)}/>
-                      <FloatButton icon={<PlusOutlined />} onClick={() => handleAddtoCart(productItem._id)}/>
-                    </FloatButton.Group>
-                  </div>
-                ))}
+                        {/* Plus Button (Add to Cart) */}
+                        <FloatButton
+                          icon={<PlusOutlined />}
+                          onClick={() => handleAddtoCart(productItem._id)}
+                        />
+                      </FloatButton.Group>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Right Arrow */}

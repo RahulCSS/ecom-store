@@ -10,8 +10,11 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['Admin', 'Customer', 'Vendor', 'Delivery'],required: true },
     status: { type: String, enum: ['Active', 'Inactive', 'Suspended'], default: 'Active'},
     token: { type: String, default: ''},
-    wishlist: {type: Object, default: {}},
-    cart: {type: Object, default: {}},
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'product'}],
+    cart: [{
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'product'},
+        quantity: { type: Number, default: 1 }, 
+      }],
 },{timestamps: true, minimize: false});
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema);

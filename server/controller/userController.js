@@ -87,4 +87,44 @@ const getCurrentUser = async (req,res) =>{
     }
 }; 
 
-export {loginUser, registerUser, getCurrentUser};
+
+
+// Update Cart
+const updateCart = async (req,res) =>{
+    const { id } = req.params;
+    const {cart} = req.body;
+    try {
+        // Find the user and update their cart
+        const user = await userModel.findById(id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.cart = cart; // Update with valid cart items
+        await user.save();
+
+        res.status(200).json({ success: true, message: "Cart updated successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+    };
+    
+    // Update Wishlist
+    const updateWishlist = async (req,res) =>{
+        const { id } = req.params;
+        const {wishlist} = req.body;
+        try {
+            // Find the user and update the cart
+            const user = await userModel.findById(id);
+            if (!user) return res.status(404).json({ message: "User not found" });
+    
+            user.wishlist = wishlist; // Update wishlist
+            await user.save();
+    
+            res.status(200).json({ success: true, message: "Wishlist updated successfully" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: "Server error" });
+        }
+        };   
+
+export {loginUser, registerUser, getCurrentUser, updateCart, updateWishlist};
