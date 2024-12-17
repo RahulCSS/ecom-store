@@ -72,12 +72,8 @@ const ProductCategory = ({ category, product }) => {
                 {productsInSubcategory.map((productItem, index) => {
                   
                   const isWished = checkIfWished(productItem._id);
-                  const cartItem = Array.isArray(cart) ? cart.find(item => item.id === productItem._id) : null;
+                  const cartItem = Array.isArray(cart) ? cart.find(item => item.productId === productItem._id) : null;
                   const cartQuantity = cartItem ? cartItem.quantity : 0;
-                  console.log(user);
-                  console.log(cart);
-                  console.log(cartItem);
-                  console.log(cartQuantity);
 
                   return (
                     <div key={index} className="relative w-56 h-96">

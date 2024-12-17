@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Menu, Dropdown, message, Spin } from 'antd';
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined} from '@ant-design/icons';
+import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, 
+  HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined,
+  createFromIconfontCN } from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux'
 import { showLoginModal,showSignupModal} from '../store/ModalSlice'
 import { setUserRole, clearUserRole, setUser, clearUser } from '../store/UserSlice';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchProducts } from '../store/ProductSlice';
-
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -18,9 +19,16 @@ const NavBar = () => {
   const user = useSelector((state)=> state.user);
   const isUser = !!user.id;
   const role = user?.role;
+  const cart = user?.cart;
   const [loading, setLoading] = useState(false);
- const products = useSelector((state) => state.product.fetchProduct);
-
+  const products = useSelector((state) => state.product.fetchProduct);
+  const IconFont = createFromIconfontCN({
+    scriptUrl: [
+      '//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js',
+      // icon-javascript, icon-java, icon-shoppingcart (overridden)
+      '//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js', // icon-shoppingcart, icon-python
+    ],
+  });
   
   const showLogin =()=>{
     dispatch(showLoginModal());
@@ -42,6 +50,11 @@ const NavBar = () => {
   const signupDelivery = ()=>{
     showSignup();
     dispatch(setUserRole('Delivery'));
+  }
+  const handleNavigateCart =() => {
+    if (role === 'Customer') 
+      navigate('/cart');
+  
   }
 
   const logout = () => {
@@ -101,15 +114,79 @@ const NavBar = () => {
   const userMenuItems = [
     { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
     { type: 'divider' },
-    { key: 'myaccount', label: role === 'Customer' ? '' : 'My Account', icon: role === 'Customer' ? '' : <UserOutlined />, },
-    { key: 'orders', label: role === 'Customer' ? '' : 'Orders' ,icon: role === 'Customer' ? '' : <ProfileOutlined />},
-    { key: 'wishlist', label: role === 'Customer' ? '' : 'Wishlist', icon: role === 'Customer' ? '' : <HeartOutlined /> },
-    { key: 'coupons', label: role === 'Customer' ? '' : 'Coupons', icon: role === 'Customer' ? '' : <GiftOutlined /> },
-    { key:'becomeseller', label: isUser ? 'Logout' : renderMenuLabel('Become a Seller/Delivery'), 
-                                icon: isUser ? <LogoutOutlined /> : '', onClick: isUser ? logout : null},
-                                
-
+    { key: 'myaccount', label:  isUser ? (role === 'Customer' ? 'My Account': null) : ' My Account', icon:  isUser ? (role === 'Customer' ? <UserOutlined />: null) : <UserOutlined /> },
+    { key: 'orders', label:  isUser ?  (role === 'Customer' ? 'Orders': null) :'Orders' ,icon:  isUser ?  (role === 'Customer' ? <ProfileOutlined />: null) : <ProfileOutlined />},
+    { key: 'wishlist', label:  isUser ?  (role === 'Customer' ? 'Wishlist': null) :'Wishlist', icon:  isUser ?  (role === 'Customer' ? <HeartOutlined />: null) : <HeartOutlined /> },
+    { key: 'coupons', label:  isUser ?  (role === 'Customer' ? 'Coupons': null) :'Coupons', icon: isUser ?  (role === 'Customer' ? <GiftOutlined /> : null) : <GiftOutlined /> },
+    { key:'becomeseller', 
+      label: isUser ? 'Logout' : renderMenuLabel('Become a Seller/Delivery'), 
+      icon: isUser ? <LogoutOutlined /> : '', 
+      onClick: isUser ? logout : null},          
   ];
+
+
+  const cartItems = cart.length === 0 ? [
+    {
+      key: 'emptycart',
+      label: (
+        <div className="flex flex-col items-center justify-center p-4 text-center">
+          <div>Your cart is empty</div>
+          <IconFont type="icon-shoppingcart" style={{ fontSize: '5rem' }} />
+        </div>
+      )
+    }
+  ] : cart.map((cartItem) => {
+    const product = products.find((prod) => prod._id === cartItem.productId);
+    if (!product) return null; 
+    const itemtotal = product.price * cartItem.quantity; 
+  
+    return {
+      key: cartItem.productId,
+      label: (
+        <div className="flex items-center space-x-4">
+          
+          <div className="flex-shrink-0">
+            <img
+              alt="product"
+              src={product.imageUrl[0]}
+              className="w-16 h-16 object-cover"
+            />
+          </div>
+  
+          <div className="flex-1 w-48">
+            <div className="text-l ">{product.name}</div>
+            <div className="text-xs font-thin ">{product.description}</div>
+            <div className="flex justify-between items-center">
+              <div className="text-sm font-light">₹{product.price}</div>
+              <div className="text-sm font-light ml-2">x{cartItem.quantity}</div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col justify-between items-center w-16">
+            <div className="text-sm font-light">₹{itemtotal}</div>
+          </div>
+        </div>
+      ),
+      itemtotal,
+    };
+  });
+  
+  const totalAmount = cartItems.reduce((acc, item) => {
+    return item && item.itemtotal ? acc + item.itemtotal : acc;
+  }, 0);
+  
+  
+  cartItems.push({
+    key: 'total',
+    label: (
+      <div className="flex justify-between items-center px-4 py-4 border-t-2">
+        <div className="font-bold text-xl">Total:</div>
+        <div className="font-bold text-xl">₹{totalAmount}</div>
+      </div>
+    ),
+  });
+  
+
 
 
   const handleMouseOver = (e) => {
@@ -122,8 +199,9 @@ const NavBar = () => {
 
   const getpresentUser = async () => {
     try {
-      setLoading(true); 
+      setLoading(true);
       const response = await GetCurrentUser();
+  
       if (response.success) {
         dispatch(setUser(response.data));
       } else {
@@ -131,9 +209,9 @@ const NavBar = () => {
         dispatch(clearUser());
       }
     } catch (error) {
-      message.error('Failed to fetch user data, please try again later');
+      message.error(error?.response?.data?.message || 'Failed to fetch user data, please try again later');
       dispatch(clearUser());
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -144,6 +222,7 @@ const NavBar = () => {
     if (token) {
       getpresentUser();
     } else {
+      message.error('Authentication required. Please log in.');
       navigate('/');
     }
   },[]);
@@ -186,8 +265,13 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           {(role ==='Customer' || role === null) && (
             <>
-              <SearchOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
-              <ShoppingCartOutlined style={{ fontSize: '2rem' }} className="cursor-pointer px-2" />
+              <SearchOutlined style={{ fontSize: '2.5rem' }} className="cursor-pointer px-2" />
+              <HeartOutlined style={{ fontSize: '2.5rem' }} className="cursor-pointer px-2"/>
+              <Dropdown menu={{ items: cartItems }} overlayClassName="sharp-corner-dropdown" dropdownStyle={{ minWidth: '200px' }}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <ShoppingCartOutlined onClick={handleNavigateCart}style={{ fontSize: '2.5rem' }} className="cursor-pointer px-2" />
+                </a>
+              </Dropdown>
             </>
           )}
 

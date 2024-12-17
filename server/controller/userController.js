@@ -72,20 +72,22 @@ const registerUser = async (req,res) =>{
 };
 
 // Getting current user details with token verification and validation of user id in request body  
-const getCurrentUser = async (req,res) =>{
-    try{
-        const user = await userModel.findById(req.body.userId).select('-password -__v -updatedAt -createdAt');
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-        res.status(200).json({ success: true, data: user });
-    }catch(error){
-        console.error(error);
-        if (!res.headersSent) {  // Check if headers are already sent
-            return res.status(500).json({ success: false, message: "Server error" });
-        }
+const getCurrentUser = async (req, res) => {
+    try {
+      const user = await userModel.findById(req.body.userId).select('-password -__v -updatedAt -createdAt');
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      res.status(200).json({ success: true, data: user });
+    } catch (error) {
+      console.error(error);
+      // Check if the response headers were already sent to avoid multiple responses
+      if (!res.headersSent) {
+        return res.status(500).json({ success: false, message: "Server error" });
+      }
     }
-}; 
+  };
+  
 
 
 
