@@ -1,7 +1,7 @@
 import {axiosInstance} from ".";
 const token = localStorage.getItem('token');
 
-//*Register
+//Register
 export const RegisterUser = async (payload) => {
     try{
         const response = await axiosInstance.post("/api/user/register",payload);
@@ -12,7 +12,7 @@ export const RegisterUser = async (payload) => {
     }
 };
 
-//*Login
+//Login
 export const LoginUser = async (payload) => {
     try{
         const response = await axiosInstance.post("/api/user/login",payload);
@@ -22,7 +22,7 @@ export const LoginUser = async (payload) => {
     }
 };
 
-//*Get Current User
+//Get Current User
 export const GetCurrentUser = async () => {
     try{
         const response = await axiosInstance.get("/api/user/getcurrentuser",{
@@ -36,6 +36,7 @@ export const GetCurrentUser = async () => {
     }
 };
 
+//Update Cart
 export const UpdateCart = async (id, payload) => {
     try{
         const response = await axiosInstance.put(`/api/user/updatecart/${id}`,{cart : payload});
@@ -45,6 +46,7 @@ export const UpdateCart = async (id, payload) => {
     }
 };
 
+//Update Wishlist
 export const UpdateWishlist = async (id, payload) => {
     try{
         const response = await axiosInstance.put(`/api/user/updatewishlist/${id}`,{wishlist : payload});

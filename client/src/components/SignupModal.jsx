@@ -9,8 +9,7 @@ const SignupModal = () => {
     const dispatch = useDispatch();
     const userRole = useSelector((state) => state.user.role);
     const visible = useSelector((state) => state.modal.isSignupModalOpen);
-    //console.log('Signup-'+visible);
-
+ 
     const [form] = Form.useForm();
     const handleRegisterClick = () => {
         dispatch(hideSignupModal()); 
@@ -20,7 +19,6 @@ const SignupModal = () => {
         dispatch(hideSignupModal());
         const { confirmPassword , ...filtered } = values;
         const userPayload = {...filtered, role: userRole};
-        //console.log(values, filtered, userPayload);
         try{
           const response = await RegisterUser(userPayload);
           if(response.success){
@@ -31,14 +29,11 @@ const SignupModal = () => {
             setTimeout(() => {
               handleRegisterClick();
             },1000);
-            //console.log(response.message);
           }else{
             message.error(response.message);
-            //console.error(response.message);
           }
         }catch(error){
           message.error(error.message);
-          //console.error(error.message);
         }
         form.resetFields();
     };

@@ -4,6 +4,7 @@ import { connection } from './config/dbConfig.js'
 import { userRoute } from './route/userRoute.js'
 import { productRoute } from './route/productRoute.js'
 import { uploadRoute } from './route/uploadRoute.js'
+import { paymentRoute } from './route/paymentRoute.js';
 import 'dotenv/config'
 
 // Configuration
@@ -21,7 +22,7 @@ connection();
 app.use("/api/user",userRoute);
 app.use("/api/product",productRoute);
 app.use('/api/upload', uploadRoute);
-
+app.use('/api/payment',paymentRoute);
 
 app.listen(port,() =>{
     console.log(`Server listening on http://localhost:${port}`);

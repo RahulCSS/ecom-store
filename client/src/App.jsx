@@ -7,6 +7,9 @@ import Vendor from './pages/Vendor'
 import Delivery from './pages/Delivery'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import Orders from './pages/Orders'
+import Success from './pages/Success'
+import Cancel from './pages/Cancel'
 
 const App = () => {
   return (
@@ -19,6 +22,9 @@ const App = () => {
         <Route path="/delivery" element={<Delivery />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
       </Routes>
     </div>
   )

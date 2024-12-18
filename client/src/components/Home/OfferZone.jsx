@@ -4,7 +4,7 @@ import { Card, Col, Row } from 'antd';
 const { Meta } = Card;
 
 const OfferZone = () => {
-  // Dummy data for inner cards for each main card
+  
   const card1 = [
     { title: 'Card 1', description: 'Card 1 Description' },
     { title: 'Card 2', description: 'Card 2 Description' },
@@ -26,12 +26,12 @@ const OfferZone = () => {
 
   return (
     <div className='pb-[20px]'>
-      {/* Main Container for the 3 large cards */}
-      <Row gutter={[12, 16]}> {/* 16px horizontal and 24px vertical spacing */}
-        {/* First Main Card */}
+      
+      <Row gutter={[12, 16]}> 
+        
         <Col span={8}>
           <Card style={{ height: '100%' }} title="More reasons to shop" bordered={false}>
-            {/* Inner 2x2 grid of cards for Main Card 1 */}
+            
             <Row gutter={[16, 16]}>
               {card1.map((card, index) => (
                 <Col span={12} key={index}>
@@ -44,10 +44,10 @@ const OfferZone = () => {
           </Card>
         </Col>
 
-        {/* Second Main Card */}
+        
         <Col span={8}>
           <Card style={{ height: '100%' }} title="Biggest deals" bordered={false}>
-            {/* Inner 2x2 grid of cards for Main Card 2 */}
+            
             <Row gutter={[16,16]}>
               {card2.map((card, index) => (
                 <Col span={12} key={index}>
@@ -60,13 +60,13 @@ const OfferZone = () => {
           </Card>
         </Col>
 
-        {/* Third Main Card */}
+        
         <Col span={8}>
           <Card style={{ height: '100%' }} title="In focus" bordered={false}>
-            {/* Inner 2 rectangular cards for Main Card 3 */}
+            
             <Row gutter={[16, 16]}>
               {card3.map((card, index) => (
-                <Col span={24} key={index}> {/* span={24} for full width of each card */}
+                <Col span={24} key={index}> 
                   <Card hoverable cover={<img alt={card.title} src="https://via.placeholder.com/300x150" />}>
                     <Meta title={card.title} description={card.description} />
                   </Card>

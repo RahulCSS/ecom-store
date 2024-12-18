@@ -19,13 +19,11 @@ const Products = () => {
     status: null,
   });
 
-  const categories = [...new Set(products.map((product) => product.category))]; // Unique categories
-  const subcategories = [...new Set(products.map((product) => product.subcategory))]; // Unique subcategories
+  const categories = [...new Set(products.map((product) => product.category))]; 
+  const subcategories = [...new Set(products.map((product) => product.subcategory))]; 
   const statusOptions = ['pending', 'approved', 'rejected'];
 
-  const [isFetched, setIsFetched] = useState(false); // Flag to check if products are already fetched
-
-  // Columns for the Table
+  const [isFetched, setIsFetched] = useState(false); 
   const columns = [
     {
       title: 'Product Name',
@@ -225,7 +223,7 @@ const Products = () => {
     },
   ];
 
-  // Handlers for Search and Filters
+  // Handlers
   const handleSearchChange = (event) => {
     const value = event.target.value.toLowerCase();
     setSearchText(value);

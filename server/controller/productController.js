@@ -5,7 +5,6 @@ import productModel from "../model/productModel.js";
 const addProduct = async (req,res) =>{
     const {name, description, price, stock, category, subcategory, sellerId} = req.body;
     try{
-        //checking if product already registered
         const exists = await productModel.findOne({name});
         if(exists){
             return res.json({success:false , message: "Product already exists"})

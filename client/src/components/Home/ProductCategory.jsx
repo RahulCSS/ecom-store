@@ -16,7 +16,7 @@ const ProductCategory = ({ category, product }) => {
 
   const scrollContainerRef = useRef(null);
 
-  // Handle scrolling through the product list
+  //Handlers
   const handleScroll = (direction) => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
@@ -27,24 +27,16 @@ const ProductCategory = ({ category, product }) => {
       });
     }
   };
-
-  // Check if a product is in the wishlist
-  const checkIfWished = (id) => Array.isArray(wishlist) && wishlist.includes(id);
-  
-  // Handle adding/removing from wishlist
   const handleAddRemoveWish = (id) => {
     dispatch(addremoveWish(id));
   };
-
-  // Handle adding to cart
   const handleAddtoCart = (id) => {
     dispatch(addtoCart(id));
   };
-
-  // Handle removing from cart
   const handleRemovefromCart = (id) => {
     dispatch(removefromCart(id));
   };
+  const checkIfWished = (id) => Array.isArray(wishlist) && wishlist.includes(id);
 
   return (
     <Layout className="min-h-screen">
@@ -57,14 +49,13 @@ const ProductCategory = ({ category, product }) => {
 
           return (
             <div key={subcategory} className="flex items-center justify-center relative mb-8">
-              {/* Left Arrow */}
+              
               <Button
                 icon={<LeftOutlined />}
                 onClick={() => handleScroll('left')}
                 className="absolute left-0 z-10 bg-black bg-opacity-50 text-white"
               />
 
-              {/* Scrollable Container for Cards */}
               <div
                 ref={scrollContainerRef}
                 className="flex overflow-x-auto whitespace-nowrap gap-4 py-4 w-full scroll-smooth"
@@ -88,7 +79,6 @@ const ProductCategory = ({ category, product }) => {
                         />
                       </Card>
 
-                      {/* Floating Heart (Wishlist) Button */}
                       <FloatButton
                         icon={isUser && isWished ? <HeartTwoTone twoToneColor="#eb2f96" /> : <HeartOutlined />}
                         className="absolute top-2 right-2 z-10 bg-red-500 text-white"
@@ -97,7 +87,6 @@ const ProductCategory = ({ category, product }) => {
                         onClick={() => handleAddRemoveWish(productItem._id)}
                       />
 
-                      {/* Floating Shopping Cart (Add to Cart) Button with Hover Effect */}
                       <FloatButton.Group
                         trigger="hover"
                         className="absolute bottom-2 right-2 z-10"
@@ -106,7 +95,7 @@ const ProductCategory = ({ category, product }) => {
                         tooltip={isUser ? '':'Login to save Cart'}
                         badge={cartQuantity > 0 ? { count: cartQuantity, showZero: false } : null}
                       >
-                        {/* Minus Button (Remove from Cart) */}
+
                         {cartQuantity > 0 && (
                           <FloatButton
                             icon={<MinusOutlined />}
@@ -114,7 +103,6 @@ const ProductCategory = ({ category, product }) => {
                           />
                         )}
 
-                        {/* Plus Button (Add to Cart) */}
                         <FloatButton
                           icon={<PlusOutlined />}
                           onClick={() => handleAddtoCart(productItem._id)}
@@ -125,7 +113,6 @@ const ProductCategory = ({ category, product }) => {
                 })}
               </div>
 
-              {/* Right Arrow */}
               <Button
                 icon={<RightOutlined />}
                 onClick={() => handleScroll('right')}

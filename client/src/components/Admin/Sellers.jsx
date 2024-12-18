@@ -17,14 +17,14 @@ const Sellers = () => {
     status: '',
   });
 
-  //* API to handle product status change
+  //Handlers
   const handleProductStatusChange = async (checked, product) => {
     const newStatus = checked ? 'approved' : 'rejected';
     try {
       const response = await UpdateStatus(product._id, newStatus);
       if (response.success) {
         message.success(`Product status updated to ${newStatus}`);
-        dispatch(fetchProducts()); // Re-fetch products to update the UI
+        dispatch(fetchProducts());
       } else {
         message.error('Failed to update product status');
       }
@@ -32,13 +32,9 @@ const Sellers = () => {
       message.error(error.message);
     }
   };
-
-  // Refresh button handler
   const handleRefresh = () => {
     dispatch(fetchProducts());
   };
-
-  // Handle filter change
   const handleFilterChange = (value, type) => {
     setFilters((prev) => ({
       ...prev,
@@ -46,7 +42,6 @@ const Sellers = () => {
     }));
   };
 
-  // Group products by seller only when `products` or `filters` change
   useEffect(() => {
     if (products) {
       const groupBySeller = products.reduce((acc, product) => {
@@ -65,7 +60,7 @@ const Sellers = () => {
     }
   }, [products]);
 
-  // Filter products based on selected filters for each store
+  // Filter products
   const getFilteredProducts = (sellerId) => {
     const sellerProducts = groupedProducts[sellerId]?.products || [];
     return sellerProducts.filter((product) => {
@@ -140,21 +135,21 @@ const Sellers = () => {
     },
   ];
 
-  // Create Tabs for each seller
+  
   const items = Object.keys(groupedProducts).map((sellerId) => ({
     key: sellerId,
     label: `${groupedProducts[sellerId].name}`,
     children: (
       <>
         <Row justify="space-between" style={{ marginBottom: 20 }}>
-          {/* Left Section: Refresh Button */}
+          
           <Col>
             <Button type="default" icon={<ReloadOutlined />} onClick={handleRefresh}>
               Refresh Products
             </Button>
           </Col>
 
-          {/* Right Section: Filter Controls */}
+          
           <Col>
             <Row gutter={16}>
               <Col>
@@ -199,10 +194,10 @@ const Sellers = () => {
           </Col>
         </Row>
 
-        {/* Table with filtered products */}
+        
         <Table
           columns={columns}
-          dataSource={getFilteredProducts(sellerId)} // Use filtered products for the current seller
+          dataSource={getFilteredProducts(sellerId)} 
           rowKey="_id"
           pagination={false}
         />

@@ -4,8 +4,12 @@ import { addtoCart, removefromCart, deletefromCart } from '../store/UserSlice';
 import { Layout, Typography, Button, Radio } from 'antd';
 import { DeleteOutlined,PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { createCheckoutSession } from '../apicalls/payment';
+
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
+const stripePromise = loadStripe('pk_test_51QX2LrLSawlxrQUDUXNOZbU1g5BfoEJnAB7r6nBLhKat8NbOOV45kNSTG5QapC2J6Y855kFeuiEQ7Pr8Aw0qTQlX00t8ahlyB3');
 
 const Cart = () => {
     const dispatch = useDispatch();
@@ -13,8 +17,8 @@ const Cart = () => {
     const cart = useSelector((state) => state.user.cart);
     const products = useSelector((state) => state.product.fetchProduct);
     const [position, setPosition] = useState('end');
+    const [total, setTotal] = useState(0);
 
-    // Map cart items to product details
     const cartItems = cart.map((cartItem) => {
         const product = products.find((prod) => prod._id === cartItem.productId);
         if (product) {
@@ -30,14 +34,24 @@ const Cart = () => {
         }
         return null;
     }).filter(item => item !== null);
+    useEffect(() => {
+        const totalAmount = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+        setTotal(totalAmount);
+    }, [cartItems]);
 
-    // Calculate total price of cart items
-    const totalAmount = cartItems.reduce((total, item) => total + item.totalPrice, 0);
-
-    // Handlers
-    const handleCheckout = () => {
-        navigate('/checkout');
+    const handleCheckout = async () => {
+        try {
+            const { sessionId } = await createCheckoutSession({ cart: cartItems });
+            const stripe = await stripePromise;
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) {
+                console.error("Error redirecting to checkout:", error);
+            }
+        } catch (err) {
+            console.error('Error during checkout session creation:', err);
+        }
     };
+
     const handleAddtoCart = (id) => {
         dispatch(addtoCart(id));
         console.log(id);
@@ -55,19 +69,18 @@ const Cart = () => {
 
     return (
         <Layout className="min-h-screen bg-gray-100">
-            {/* Header */}
+
             <Header className="bg-green-600 text-white text-center py-4">
                 <Title level={3} className="text-white">Congratulations on Free Shipping!</Title>
             </Header>
 
-            {/* Content */}
             <Content className="flex justify-center items-center bg-gray-100 py-6">
                 <div className="container mx-auto px-4">
                     {cartItems.length > 0 ? (
                         cartItems.map((item) => (
                             
                             <div
-                                key={item._id} // Add the unique key prop here
+                                key={item._id} 
                                 className="flex items-center space-x-4 my-4 p-4 bg-white rounded-lg shadow-md"
                             >
                                 <div className="flex-shrink-0">
@@ -107,16 +120,16 @@ const Cart = () => {
                 </div>
             </Content>
 
-            {/* Footer */}
             <Footer className="bg-gray-800 text-white text-center py-4">
                 <div className="mb-4 text-xl font-semibold">
-                    Total Amount: ₹{totalAmount}
+                    Total Amount: ₹{total}
                 </div>
                 <Button
                     onClick={handleCheckout}
                     type="primary"
                     size="large"
                     className="w-full sm:w-auto"
+                    disabled={cartItems.length === 0}
                 >
                     Proceed to Checkout
                 </Button>

@@ -81,7 +81,6 @@ const getCurrentUser = async (req, res) => {
       res.status(200).json({ success: true, data: user });
     } catch (error) {
       console.error(error);
-      // Check if the response headers were already sent to avoid multiple responses
       if (!res.headersSent) {
         return res.status(500).json({ success: false, message: "Server error" });
       }
@@ -96,11 +95,10 @@ const updateCart = async (req,res) =>{
     const { id } = req.params;
     const {cart} = req.body;
     try {
-        // Find the user and update their cart
         const user = await userModel.findById(id);
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        user.cart = cart; // Update with valid cart items
+        user.cart = cart;
         await user.save();
 
         res.status(200).json({ success: true, message: "Cart updated successfully" });
