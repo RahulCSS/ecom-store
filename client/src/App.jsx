@@ -6,6 +6,7 @@ import Admin from './pages/Admin'
 import Vendor from './pages/Vendor'
 import Delivery from './pages/Delivery'
 import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/vendor" element={<Vendor />} />
         <Route path="/delivery" element={<Delivery />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </div>
   )

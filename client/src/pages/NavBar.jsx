@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Menu, Dropdown, message, Spin } from 'antd';
+import { Avatar, Menu, Dropdown, message, Spin, Button } from 'antd';
 import { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, 
   HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined,
   createFromIconfontCN } from '@ant-design/icons';
@@ -11,6 +11,7 @@ import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
 import { useNavigate } from 'react-router-dom';
 import { fetchProducts } from '../store/ProductSlice';
+import logo from '../assets/logo.png'
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -30,19 +31,17 @@ const NavBar = () => {
     ],
   });
   
+  //Handlers
   const showLogin =()=>{
     dispatch(showLoginModal());
   }
-
   const showSignup =()=>{
     dispatch(showSignupModal());
   }
-
   const signupCustomer = ()=>{
     showSignup();
     dispatch(setUserRole('Customer'));
   }
-
   const signupSeller = ()=>{
     showSignup();
     dispatch(setUserRole('Vendor'));
@@ -54,7 +53,13 @@ const NavBar = () => {
   const handleNavigateCart =() => {
     if (role === 'Customer') 
       navigate('/cart');
-  
+  }
+  const handleCheckout =() =>{
+    if (role === 'Customer') 
+      navigate('/checkout');
+  }
+  const handleNavigateHome = () =>{
+    navigate('/');
   }
 
   const logout = () => {
@@ -108,7 +113,7 @@ const NavBar = () => {
         </>
       )
     }
-    return <div>{label}</div>; // For other labels, just render the text normally
+    return <div>{label}</div>; 
   };
 
   const userMenuItems = [
@@ -179,10 +184,31 @@ const NavBar = () => {
   cartItems.push({
     key: 'total',
     label: (
-      <div className="flex justify-between items-center px-4 py-4 border-t-2">
-        <div className="font-bold text-xl">Total:</div>
-        <div className="font-bold text-xl">₹{totalAmount}</div>
+      <>
+      <div className="flex justify-between items-center px-4 py-2 border-t-2">
+          <div className="font-bold text-xl">Total:</div>
+          <div className="font-bold text-xl">₹{totalAmount}</div>
       </div>
+      <div className="flex space-x-4  w-full">
+        <Button
+          onClick={handleNavigateCart} 
+          className="w-1/2 py-2 px-4"
+          color="default"
+          size="large"
+        >
+          Check My Cart
+        </Button>
+        <Button
+          onClick={handleCheckout} 
+          className="w-1/2 py-2 px-4"
+          color="default"
+          variant="solid"
+          size="large"
+        >
+          Checkout
+        </Button>
+      </div>
+      </>
     ),
   });
   
@@ -245,7 +271,7 @@ const NavBar = () => {
 
         {/* Logo */}
         <div className="flex items-center space-x-4 mx-4">
-          <img src="/logo.svg" alt="Logo" className="h-8" />
+          <img src={logo} alt="Logo" className="h-8" onClick={handleNavigateHome}/>
         </div>
 
         {/* Menu in the center */}
