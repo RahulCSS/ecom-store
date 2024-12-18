@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { UpdateCart, UpdateWishlist} from "../apicalls/user";
+import { UpdateCart, UpdateWishlist } from "../apicalls/user";
 
 const userSlice = createSlice({
     name:'user',

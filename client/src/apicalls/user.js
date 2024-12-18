@@ -55,3 +55,13 @@ export const UpdateWishlist = async (id, payload) => {
         return err;
     }
 };
+
+//Clear Cart
+export const ClearCart = async (id) => {
+    try{
+        const response = await axiosInstance.post(`/api/user/clearcart/${id}`);
+        return response.data;
+    }catch(err){
+        return err;
+    }
+};

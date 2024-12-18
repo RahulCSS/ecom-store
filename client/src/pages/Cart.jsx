@@ -3,17 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addtoCart, removefromCart, deletefromCart } from '../store/UserSlice';
 import { Layout, Typography, Button, Radio } from 'antd';
 import { DeleteOutlined,PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { createCheckoutSession } from '../apicalls/payment';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
-const stripePromise = loadStripe('pk_test_51QX2LrLSawlxrQUDUXNOZbU1g5BfoEJnAB7r6nBLhKat8NbOOV45kNSTG5QapC2J6Y855kFeuiEQ7Pr8Aw0qTQlX00t8ahlyB3');
+const stripekey = process.env.REACT_APP_API_KEY;
+const stripePromise = loadStripe(stripekey);
 
 const Cart = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const cart = useSelector((state) => state.user.cart);
     const products = useSelector((state) => state.product.fetchProduct);
     const [position, setPosition] = useState('end');
