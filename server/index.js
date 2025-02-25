@@ -9,7 +9,7 @@ import 'dotenv/config'
 
 // Configuration
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 // Middleware
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -24,5 +24,5 @@ app.use('/api/upload', uploadRoute);
 app.use('/api/payment',paymentRoute);
 
 app.listen(port,() =>{
-    console.log(`Server listening on ${port}`);
+    console.log(`Server listening on http://localhost:${port}`);
 });
