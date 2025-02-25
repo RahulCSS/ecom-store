@@ -8,7 +8,7 @@ import { createCheckoutSession } from '../apicalls/payment';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
-const stripekey = process.env.REACT_APP_API_KEY;
+const stripekey = import.meta.env.VITE_REACT_APP_API_KEY;
 const stripePromise = loadStripe(stripekey);
 
 const Cart = () => {
