@@ -4,12 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-<<<<<<< HEAD
     "server": "nodemon index.js"
-=======
-    "server": "nodemon index.js",
-    
->>>>>>> origin/HEAD
   },
   "author": "",
   "license": "ISC",
