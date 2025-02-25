@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon index.js",
-    "build": "[my-framework] build --output public"
+    
   },
   "author": "",
   "license": "ISC",
