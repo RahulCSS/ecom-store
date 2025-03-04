@@ -24,10 +24,9 @@ app.use("/api/product",productRoute);
 app.use('/api/upload', uploadRoute);
 app.use('/api/payment',paymentRoute);
 
-// app.listen(port,() =>{
-//     console.log(`Server listening on http://localhost:${port}`);
-// });
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Server is running!' });
 });
+
+export default app;
