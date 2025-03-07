@@ -29,12 +29,15 @@ const ProductCategory = ({ category, product }) => {
   };
   const handleAddRemoveWish = (id) => {
     dispatch(addremoveWish(id));
+    isUser && dispatch(updateWishlist(user.id, wishlist));
   };
   const handleAddtoCart = (id) => {
     dispatch(addtoCart(id));
+    isUser && dispatch(updateCart(user.id, cart));
   };
   const handleRemovefromCart = (id) => {
     dispatch(removefromCart(id));
+    isUser && dispatch(updateCart(user.id, cart));
   };
   const checkIfWished = (id) => Array.isArray(wishlist) && wishlist.includes(id);
 
@@ -80,10 +83,10 @@ const ProductCategory = ({ category, product }) => {
                       </Card>
 
                       <FloatButton
-                        icon={isUser && isWished ? <HeartTwoTone twoToneColor="#eb2f96" /> : <HeartOutlined />}
+                        icon={isWished ? <HeartTwoTone twoToneColor="#eb2f96" /> : <HeartOutlined />}
                         className="absolute top-2 right-2 z-10 bg-red-500 text-white"
                         shape="circle"
-                        tooltip={isUser ? (isWished ? 'Remove from Wishlist' : 'Add to Wishlist') : 'Login to save wishlist'}
+                        tooltip={isWished ? 'Remove from Wishlist' : 'Add to Wishlist'}
                         onClick={() => handleAddRemoveWish(productItem._id)}
                       />
 
@@ -92,19 +95,20 @@ const ProductCategory = ({ category, product }) => {
                         className="absolute bottom-2 right-2 z-10"
                         shape="circle"
                         icon={<ShoppingCartOutlined />}
-                        tooltip={isUser ? '':'Login to save Cart'}
                         badge={cartQuantity > 0 ? { count: cartQuantity, showZero: false } : null}
                       >
 
                         {cartQuantity > 0 && (
                           <FloatButton
                             icon={<MinusOutlined />}
+                            tooltip={'Add products to Cart'}
                             onClick={() => handleRemovefromCart(productItem._id)}
                           />
                         )}
 
                         <FloatButton
                           icon={<PlusOutlined />}
+                          tooltip={'Remove products to Cart'}
                           onClick={() => handleAddtoCart(productItem._id)}
                         />
                       </FloatButton.Group>

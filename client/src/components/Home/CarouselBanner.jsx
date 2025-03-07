@@ -32,7 +32,7 @@ const Carouselbanner = () => {
 
       
       <div className="w-[30%] h-[16rem] bg-gray-300 flex justify-center items-center">
-        <div className="text-center text-white font-bold">Poster Content</div>
+        <img src="https://zipcart.s3.ap-south-1.amazonaws.com/poster/Phone+3a+Large.jpeg" alt="poster" className="object-cover w-full h-full" />
       </div>
     </div>
   );

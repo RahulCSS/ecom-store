@@ -117,7 +117,7 @@ const updateCart = async (req,res) =>{
             const user = await userModel.findById(id);
             if (!user) return res.status(404).json({ message: "User not found" });
     
-            user.wishlist = wishlist; // Update wishlist
+            user.wishlist = wishlist;
             await user.save();
     
             res.status(200).json({ success: true, message: "Wishlist updated successfully" });

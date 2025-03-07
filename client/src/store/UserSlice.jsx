@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UpdateCart, UpdateWishlist } from "../apicalls/user";
 
+const findProductInCart = (cart, productId) => {
+    return cart.find(item => item.productId.toString() === productId);
+  };
+
 const userSlice = createSlice({
     name:'user',
     initialState: {
@@ -51,41 +55,57 @@ const userSlice = createSlice({
             const productId = action.payload;
             const existing = state.wishlist.find(item => item.toString() === productId);
             if (existing) {
-                state.wishlist = state.wishlist.filter((item) => item.toString() !== productId);
+                return {
+                    ...state,
+                    wishlist: state.wishlist.filter((item) => item.toString() !== productId)
+                  };
             } else {
-                state.wishlist.push(productId); 
+                return {
+                    ...state,
+                    wishlist: [...state.wishlist, productId]
+                  };
             }
-            UpdateWishlist(state.id, state.wishlist);
         },
 
         addtoCart: (state, action) => {
             const productId = action.payload;
-            const existingProduct = state.cart.find(item => item.productId.toString() === productId);
+             const existingProduct = findProductInCart(state.cart, productId);
             if (existingProduct) {
-                existingProduct.quantity += 1;
+                return {
+                    ...state,
+                    cart: state.cart.map(item => item.productId.toString() === productId ? { ...item, quantity: item.quantity + 1 } : item)
+                  };
             } else {
-                state.cart.push({ productId, quantity: 1 });
-            }
-            UpdateCart(state.id, state.cart); 
+                return {
+                    ...state,
+                    cart: [...state.cart, { productId, quantity: 1 }]
+                  };
+                };
         },
         removefromCart: (state, action) => {
             const productId = action.payload;
-            const existingProduct= state.cart.find(item => item.productId.toString() === productId);
+            const existingProduct = findProductInCart(state.cart, productId);
             if (existingProduct && existingProduct.quantity > 1) {
-                existingProduct.quantity -= 1;
+                return {
+                    ...state,
+                    cart: state.cart.map(item => item.productId.toString() === productId ? { ...item, quantity: item.quantity - 1 } : item)
+                  };
             }else{
-                state.cart = state.cart.filter(item => item.productId.toString() !== productId);
+                return {
+                    ...state,
+                    cart: state.cart.filter(item => item.productId.toString() !== productId)
+                  };
             }
-            UpdateCart(state.id, state.cart); 
         },
         deletefromCart: (state, action) => {
             const productId = action.payload;
-            state.cart = state.cart.filter(item => item.productId.toString() !== productId);
-            UpdateCart(state.id, state.cart); 
+            return {
+                ...state,
+                cart: state.cart.filter(item => item.productId.toString() !== productId)
+              };
         },
         emptyCart: (state) => {
-            state.cart = [];
-            UpdateCart(state.id, state.cart);
+            return { ...state, cart: [] };
         },
     },
 });
@@ -104,6 +124,7 @@ export const updateCart = (id,payload) => async (dispatch) => {
 };
 
 export const updateWishlist = (id,payload) => async (dispatch) => {
+    console.log(id);
     try {
       const response = await UpdateWishlist(id,payload);
       if (response.success) {
