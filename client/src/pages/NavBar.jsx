@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Menu, Dropdown, message, Spin, Button } from 'antd';
+import { Avatar, Menu, Dropdown, message, Spin, Button, Badge } from 'antd';
 import Icon, { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, 
   HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined,
   createFromIconfontCN } from '@ant-design/icons';
@@ -335,14 +335,18 @@ const NavBar = () => {
             <>
               <SearchOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" />
               <Dropdown menu={{ items: wishlistItems }} overlayClassName="sharp-corner-dropdown" placement="bottom" dropdownStyle={{ minWidth: '200px' }}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <HeartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2"/>
-                </a>
+                <Badge  count={wishlist.length}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <HeartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2"/>
+                  </a>
+                  </Badge>
               </Dropdown>
               <Dropdown menu={{ items: cartItems }} overlayClassName="sharp-corner-dropdown" placement="bottom" dropdownStyle={{ minWidth: '200px' }}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <ShoppingCartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" />
-                </a>
+                <Badge  count={cart.length}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <ShoppingCartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" />
+                  </a>
+                </Badge>
               </Dropdown>
             </>
           )}

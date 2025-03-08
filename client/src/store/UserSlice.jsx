@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { message } from "antd";
 import { UpdateCart, UpdateWishlist } from "../apicalls/user";
 
 const findProductInCart = (cart, productId) => {
@@ -28,16 +29,39 @@ const userSlice = createSlice({
             state.userRole = null;
         },
         setUser: (state,action) => {
-            state.id = action.payload._id;
-            state.name = action.payload.name;
-            state.email = action.payload.email;
-            state.phone_number = action.payload.phone_number;
-            state.address = action.payload.address;
-            state.role = action.payload.role;
-            state.status = action.payload.status;
-            state.token = action.payload.token;
-            state.wishlist = action.payload.wishlist;
-            state.cart = action.payload.cart;
+            const newState = { ...state };
+            newState.id = action.payload._id;
+            newState.name = action.payload.name;
+            newState.email = action.payload.email;
+            newState.phone_number = action.payload.phone_number;
+            newState.address = action.payload.address;
+            newState.role = action.payload.role;
+            newState.status = action.payload.status;
+            newState.token = action.payload.token;
+
+            if (action.payload.wishlist) {
+                const newWishlist = action.payload.wishlist.filter((item) => {
+                return !state.wishlist.includes(item);
+                });
+                newState.wishlist = [...state.wishlist, ...newWishlist];
+            }
+
+            if (action.payload.cart) {
+                const newCart = action.payload.cart.filter((item) => {
+                  return !state.cart.some((existingItem) => existingItem.productId === item.productId);
+                });
+                newState.cart = state.cart.map((existingItem) => {
+                  const newItem = newCart.find((newItem) => newItem.productId === existingItem.productId);
+                  if (newItem) {
+                    return { ...existingItem, quantity: newItem.quantity };
+                  }
+                  return existingItem;
+                }).concat(newCart.filter((item) => {
+                  return !state.cart.some((existingItem) => existingItem.productId === item.productId);
+                }));
+              }
+
+            return newState;
         },
         clearUser: (state) => {
             state.id = null;
@@ -54,22 +78,24 @@ const userSlice = createSlice({
         addremoveWish : (state,action) => { 
             const productId = action.payload;
             const existing = state.wishlist.find(item => item.toString() === productId);
+            
             if (existing) {
+                const newWishlist = state.wishlist.filter((item) => item.toString() !== productId);
                 return {
                     ...state,
-                    wishlist: state.wishlist.filter((item) => item.toString() !== productId)
-                  };
+                    wishlist: newWishlist,
+                };
             } else {
                 return {
                     ...state,
-                    wishlist: [...state.wishlist, productId]
-                  };
+                    wishlist: [...state.wishlist, productId],
+                };
             }
         },
 
         addtoCart: (state, action) => {
             const productId = action.payload;
-             const existingProduct = findProductInCart(state.cart, productId);
+            const existingProduct = findProductInCart(state.cart, productId);
             if (existingProduct) {
                 return {
                     ...state,
@@ -111,6 +137,8 @@ const userSlice = createSlice({
 });
 
 export const updateCart = (id,payload) => async (dispatch) => {
+    console.log(id);
+    console.log(payload);
     try {
       const response = await UpdateCart(id, payload);
       if (response.success) {
@@ -124,7 +152,6 @@ export const updateCart = (id,payload) => async (dispatch) => {
 };
 
 export const updateWishlist = (id,payload) => async (dispatch) => {
-    console.log(id);
     try {
       const response = await UpdateWishlist(id,payload);
       if (response.success) {

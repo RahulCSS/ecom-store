@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Card, Button, Layout, FloatButton } from 'antd';
 import { LeftOutlined, RightOutlined, HeartTwoTone, HeartOutlined, ShoppingCartOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +13,6 @@ const ProductCategory = ({ category, product }) => {
   const wishlist = useSelector(state => state.user.wishlist);
   const user = useSelector(state => state.user);
   const isUser = !!user.id;
-
   const scrollContainerRef = useRef(null);
 
   //Handlers
@@ -27,19 +26,47 @@ const ProductCategory = ({ category, product }) => {
       });
     }
   };
+
   const handleAddRemoveWish = (id) => {
     dispatch(addremoveWish(id));
-    isUser && dispatch(updateWishlist(user.id, wishlist));
+    if (isUser) { 
+      const existing = wishlist.find(item => item.toString() === id);
+            if (existing) {
+                const newWishlist = wishlist.filter((item) => item.toString() !==id);
+                dispatch(updateWishlist(user.id, newWishlist));
+            } else {
+              dispatch(updateWishlist(user.id, [...wishlist, id]));
+            }
+    }
   };
+
   const handleAddtoCart = (id) => {
     dispatch(addtoCart(id));
-    isUser && dispatch(updateCart(user.id, cart));
+    if(isUser) {
+      const existingProduct = cart.find(item => item.productId.toString() === id);
+      if (existingProduct) {
+          const newCart = cart.map(item => item.productId.toString() === id ? { ...item, quantity: item.quantity + 1 } : item);
+          dispatch(updateCart(user.id, newCart));
+      } else {
+        dispatch(updateCart(user.id, [...cart, { productId: id, quantity: 1 }]));
+      };
+    }
   };
+
   const handleRemovefromCart = (id) => {
     dispatch(removefromCart(id));
-    isUser && dispatch(updateCart(user.id, cart));
+    const existingProduct = cart.find(item => item.productId.toString() === id);
+    if(isUser) {
+      if (existingProduct && existingProduct.quantity > 1) {
+          const newCart = cart.map(item => item.productId.toString() === id ? { ...item, quantity: item.quantity - 1 } : item);
+          dispatch(updateCart(user.id, newCart));
+      }else{
+        dispatch(updateCart(user.id, cart.filter(item => item.productId.toString() !== id)));
+      }
+    }
   };
   const checkIfWished = (id) => Array.isArray(wishlist) && wishlist.includes(id);
+
 
   return (
     <Layout className="min-h-screen">
