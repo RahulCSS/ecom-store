@@ -43,7 +43,7 @@ const ProductCards = ({ category }) => {
             <div key={index} className="relative">
               <Card
                 hoverable
-                style={{ width: '220px', height: '360px', flexShrink: 1 }} 
+                style={{ width: '240px', height: '360px', flexShrink: 1 }} 
                 cover={<img alt={product.name} src={product.imageURL[0]} />}
               >
                 

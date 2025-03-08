@@ -97,7 +97,7 @@ const ProductCategory = ({ category, product }) => {
                   const cartQuantity = cartItem ? cartItem.quantity : 0;
 
                   return (
-                    <div key={index} className="relative w-56 h-96">
+                    <div key={index} className="relative w-64 h-96">
                       <Card
                         hoverable
                         className="w-full h-full flex-shrink-0"
@@ -105,8 +105,9 @@ const ProductCategory = ({ category, product }) => {
                       >
                         <Meta
                           title={<div className="text-sm break-words truncate">{productItem.name}</div>}
-                          description={`₹${productItem.price}`}
+                          description={`₹${productItem.description}`}
                         />
+                        <span>{`₹ ${productItem.price}`}</span>
                       </Card>
 
                       <FloatButton

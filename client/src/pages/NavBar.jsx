@@ -125,15 +125,18 @@ const NavBar = () => {
 
   const userMenuItems = [
     { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
-    { type: 'divider' },
-    { key: 'myaccount', label:  isUser ? (role === 'Customer' ? 'My Account': null) : ' My Account', icon:  isUser ? (role === 'Customer' ? <UserOutlined />: null) : <UserOutlined /> },
-    { key: 'orders', label:  isUser ?  (role === 'Customer' ? 'Orders': null) :'Orders' ,icon:  isUser ?  (role === 'Customer' ? <ProfileOutlined />: null) : <ProfileOutlined />},
-    { key: 'wishlist', label:  isUser ?  (role === 'Customer' ? 'Wishlist': null) :'Wishlist', icon:  isUser ?  (role === 'Customer' ? <HeartOutlined />: null) : <HeartOutlined /> },
-    { key: 'coupons', label:  isUser ?  (role === 'Customer' ? 'Coupons': null) :'Coupons', icon: isUser ?  (role === 'Customer' ? <GiftOutlined /> : null) : <GiftOutlined /> },
-    { key:'becomeseller', 
-      label: isUser ? 'Logout' : renderMenuLabel('Become a Seller/Delivery'), 
-      icon: isUser ? <LogoutOutlined /> : '', 
-      onClick: isUser ? logout : null},          
+    ...(isUser && (role === 'Admin' || role === 'Delivery Agent' || role === 'Vendor') ? [] : [
+      { type: 'divider' },
+      { key: 'myaccount', label: 'My Account', icon: <UserOutlined /> },
+      { key: 'orders', label: 'Orders', icon: <ProfileOutlined /> },
+      { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> },
+      { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> },
+    ]),
+    ...(isUser ? [
+      { key: 'logout', label: 'Logout', icon: <LogoutOutlined />, onClick: logout },
+    ] : [
+      { key: 'becomeseller', label: renderMenuLabel('Become a Seller/Delivery'), icon: '' },
+    ]),     
   ];
 
   const wishlistItems = wishlist.length === 0 ? [
