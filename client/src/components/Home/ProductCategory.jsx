@@ -70,7 +70,7 @@ const ProductCategory = ({ category, product }) => {
 
   return (
     <Layout className="min-h-screen">
-      <Header className="bg-white text-2xl">
+      <Header className="bg-white text-3xl py-5 text-center">
         {category}
       </Header>
       <Content className="px-5 bg-white">
@@ -79,7 +79,9 @@ const ProductCategory = ({ category, product }) => {
 
           return (
             <div key={subcategory} className="flex items-center justify-center relative mb-8">
-              
+              <div className="relative w-full">
+              <h2 className="text-2xl font-semibold pb-5">{subcategory}</h2>
+              <div className="flex items-center justify-center relative mb-8">
               <Button
                 icon={<LeftOutlined />}
                 onClick={() => handleScroll('left')}
@@ -150,6 +152,8 @@ const ProductCategory = ({ category, product }) => {
                 onClick={() => handleScroll('right')}
                 className="absolute right-0 z-10 bg-black bg-opacity-50 text-white"
               />
+              </div>
+            </div>
             </div>
           );
         })}

@@ -3,6 +3,7 @@ import Carouselbanner from '../components/Home/CarouselBanner'
 import CarouselBelt from '../components/Home/CarouselBelt'
 import OfferZone from '../components/Home/OfferZone'
 import Products from '../components/Home/Products'
+import Footer from '../components/Home/Footer'
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
         <CarouselBelt />
         <OfferZone />
         <Products />
+        <Footer />
     </div>
   )
 }
