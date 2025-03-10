@@ -33,6 +33,8 @@ const NavBar = () => {
   const wishlist = user?.wishlist;
   const [loading, setLoading] = useState(false);
   const products = useSelector((state) => state.product.fetchProduct);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const IconFont = createFromIconfontCN({
     scriptUrl: [
       '//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js', // icon-javascript, icon-java, icon-shoppingcart (overridden)
@@ -139,6 +141,17 @@ const NavBar = () => {
           dispatch(updateCart(user.id, cart.filter(item => item.productId.toString() !== id)));
         }
       };
+      const handleSearchChange = (event) => {
+        const value = event.target.value.toLowerCase();
+        setSearchText(value);
+        const filtered = products.filter((product) =>
+          product.name.toLowerCase().includes(value) ||
+          product.description.toLowerCase().includes(value) ||
+          product.category.toLowerCase().includes(value) ||
+          product.subcategory.toLowerCase().includes(value)
+        );
+        setFilteredProducts(filtered);
+      };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -212,7 +225,7 @@ const NavBar = () => {
     ]),     
   ];
 
-  //Wishlist
+  // Wishlist
   const wishlistItems = wishlist.length === 0 ? [
     {
       key: 'emptywishlist',
@@ -257,7 +270,7 @@ const NavBar = () => {
     };
   });
 
-  //Cart
+  // Cart
   const cartItems = cart.length === 0 ? [
     {
       key: 'emptycart',
@@ -416,7 +429,9 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           {(role ==='Customer' || role === null) && (
             <>
-              <SearchOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" onClick={showDrawer}/>
+              <a onClick={(e) => e.preventDefault()}>
+                <SearchOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" onClick={showDrawer}/>
+              </a>
               <Dropdown menu={{ items: wishlistItems }} overlayClassName="sharp-corner-dropdown" placement="bottom" dropdownStyle={{ minWidth: '200px' }}>
                 <Badge  count={wishlist.length}>
                   <a onClick={(e) => e.preventDefault()}>
@@ -451,21 +466,34 @@ const NavBar = () => {
             </>)}
 
       <Drawer
-        title="Search Product"
         onClose={onClose}
         open={open}
         key="right"
-        extra={
-          <Space>
+        closable={false}
+        size="default"
+      > 
+        <div>
+          <div className='flex justify-center items-center gap-4 pb-8'>
+            <SearchOutlined style={{ fontSize: '1.5rem' }} onClick={handleSearchChange}/>
+            <input type="text" placeholder="Search Products" className="border-2 border-gray-300 rounded-full p-2 w-72" value={searchText} onChange={handleSearchChange}/>
+          </div>
+          
+          {filteredProducts.slice(0,5).map((product) => (
+            <div key={product._id} className="flex items-center space-x-4 max-h-20 overflow-hidden py-2">
+              <div className="flex-shrink-0">
+                <img
+                  alt="product"
+                  src={product.imageUrl[0]}
+                  className="w-16 h-16 object-cover"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="text-l line-clamp-2">{product.name}</div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-            <Button type="primary" onClick={onClose}>
-              Search
-            </Button>
-          </Space>}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
       </Drawer>
     </div>
   );
