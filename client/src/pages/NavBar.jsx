@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Menu, Dropdown, message, Spin, Button, Badge, Drawer, Space} from 'antd';
+import { Avatar, Menu, Dropdown, message, Spin, Button, Badge, Drawer, Space, Tooltip} from 'antd';
 import Icon, { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, 
   HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined,
+  DeleteOutlined, DeleteFilled, PlusCircleOutlined, MinusCircleOutlined, 
   createFromIconfontCN } from '@ant-design/icons';
 import {useDispatch, useSelector} from 'react-redux'
 import { showLoginModal,showSignupModal} from '../store/ModalSlice'
-import { setUserRole, clearUserRole, setUser, clearUser } from '../store/UserSlice';
+import { setUserRole, clearUserRole, setUser, clearUser, addremoveWish, 
+  updateWishlist, addtoCart, updateCart, removefromCart, deletefromCart } from '../store/UserSlice';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 import { GetCurrentUser } from '../apicalls/user';
@@ -87,6 +89,56 @@ const NavBar = () => {
   const handleNavigateHome = () =>{
     navigate('/');
   }
+  const handleAddRemoveWish = (id,e) => {
+    e.stopPropagation();
+    e.preventDefault();
+      dispatch(addremoveWish(id));
+      if (isUser) { 
+        const existing = wishlist.find(item => item.toString() === id);
+              if (existing) {
+                  const newWishlist = wishlist.filter((item) => item.toString() !==id);
+                  dispatch(updateWishlist(user.id, newWishlist));
+              } else {
+                dispatch(updateWishlist(user.id, [...wishlist, id]));
+              }
+      }
+    };
+  const handleAddtoCart = (id,e) => {
+    e.stopPropagation();
+    e.preventDefault();
+      dispatch(addtoCart(id));
+      if(isUser) {
+        const existingProduct = cart.find(item => item.productId.toString() === id);
+        if (existingProduct) {
+            const newCart = cart.map(item => item.productId.toString() === id ? { ...item, quantity: item.quantity + 1 } : item);
+            dispatch(updateCart(user.id, newCart));
+        } else {
+          dispatch(updateCart(user.id, [...cart, { productId: id, quantity: 1 }]));
+        };
+      }
+    };
+    const handleRemovefromCart = (id,e) => {
+      e.stopPropagation();
+      e.preventDefault();
+        dispatch(removefromCart(id));
+        const existingProduct = cart.find(item => item.productId.toString() === id);
+        if(isUser) {
+          if (existingProduct && existingProduct.quantity > 1) {
+              const newCart = cart.map(item => item.productId.toString() === id ? { ...item, quantity: item.quantity - 1 } : item);
+              dispatch(updateCart(user.id, newCart));
+          }else{
+            dispatch(updateCart(user.id, cart.filter(item => item.productId.toString() !== id)));
+          }
+        }
+      };
+    const handleDeletefromCart = (id,e) => {
+      e.stopPropagation();
+      e.preventDefault();
+        dispatch(deletefromCart(id));
+        if(isUser) {
+          dispatch(updateCart(user.id, cart.filter(item => item.productId.toString() !== id)));
+        }
+      };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -103,6 +155,7 @@ const NavBar = () => {
     }, 1000);
   };
 
+  // Navbar Menu Items
   const menuItems = [
     { key: 'store', label: 'Store' },
     { key: 'electronics', label: 'Electronics' },
@@ -142,6 +195,7 @@ const NavBar = () => {
     return <div>{label}</div>; 
   };
 
+  //Navbar User Menu Items
   const userMenuItems = [
     { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
     ...(isUser && (role === 'Admin' || role === 'Delivery Agent' || role === 'Vendor') ? [] : [
@@ -158,6 +212,7 @@ const NavBar = () => {
     ]),     
   ];
 
+  //Wishlist
   const wishlistItems = wishlist.length === 0 ? [
     {
       key: 'emptywishlist',
@@ -174,7 +229,7 @@ const NavBar = () => {
     return {
       key: wishlistItem.productId,
       label: (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 max-w-80 max-h-20 overflow-hidden">
           <div className="flex-shrink-0">
             <img
               alt="product"
@@ -183,17 +238,26 @@ const NavBar = () => {
             />
           </div>
           <div className="flex-1 w-48">
-            <div className="text-l ">{product.name}</div>
-            <div className="text-xs font-thin ">{product.description}</div>
-            <div className="flex justify-between items-center"> 
+            <div className="text-l line-clamp-2">{product.name}</div>
+            <div className="text-xs font-thin line-clamp-1">{product.description}</div>
+            <div className="flex justify-between items-center">
               <div className="text-sm font-light">₹{product.price}</div>
             </div>
+          </div>
+          <div className="flex justify-between items-center w-16">
+            <Tooltip title="Add to Cart" color='geekblue' key="geekblue">
+              <ShoppingCartOutlined style={{ fontSize: '1.2rem' }} className="cursor-pointer px-2" onClick={(e) => handleAddtoCart(product._id,e)}/>
+            </Tooltip>
+            <Tooltip title="Remove" color='red' key="red">
+              <DeleteOutlined style={{ fontSize: '1.2rem' }} className="cursor-pointer px-2" onClick={(e) => handleAddRemoveWish(product._id,e)} />
+            </Tooltip>
           </div>
         </div>
       ),
     };
   });
 
+  //Cart
   const cartItems = cart.length === 0 ? [
     {
       key: 'emptycart',
@@ -212,8 +276,7 @@ const NavBar = () => {
     return {
       key: cartItem.productId,
       label: (
-        <div className="flex items-center space-x-4">
-          
+        <div className="flex items-center space-x-4 max-w-110 max-h-32 h-20 overflow-hidden">
           <div className="flex-shrink-0">
             <img
               alt="product"
@@ -221,18 +284,19 @@ const NavBar = () => {
               className="w-16 h-16 object-cover"
             />
           </div>
-  
           <div className="flex-1 w-48">
-            <div className="text-l ">{product.name}</div>
-            <div className="text-xs font-thin ">{product.description}</div>
-            <div className="flex justify-between items-center">
+            <div className="text-l line-clamp-2">{product.name}</div>
+            <div className="text-xs font-thin line-clamp-1">{product.description}</div>
               <div className="text-sm font-light">₹{product.price}</div>
-              <div className="text-sm font-light ml-2">x{cartItem.quantity}</div>
-            </div>
           </div>
-          
+          <div className="text-s font-light ml-2">x{cartItem.quantity}</div>
           <div className="flex flex-col justify-between items-center w-16">
             <div className="text-sm font-light">₹{itemtotal}</div>
+          </div>
+          <div className="flex justify-between items-center w-28">
+              <PlusCircleOutlined style={{ fontSize: '1.2rem' }} className="cursor-pointer px-2" onClick={(e) => handleAddtoCart(product._id,e)}/>
+              <DeleteFilled style={{ fontSize: '1.2rem' }} className="cursor-pointer px-2" onClick={(e) => handleDeletefromCart(product._id,e)} />
+              <MinusCircleOutlined style={{ fontSize: '1.2rem' }} className="cursor-pointer px-2" onClick={(e) => handleRemovefromCart(product._id,e)}/>
           </div>
         </div>
       ),
@@ -243,7 +307,6 @@ const NavBar = () => {
   const totalAmount = cartItems.reduce((acc, item) => {
     return item && item.itemtotal ? acc + item.itemtotal : acc;
   }, 0);
-  
   
   cartItems.push({
     key: 'total',
@@ -276,8 +339,6 @@ const NavBar = () => {
     ),
   });
   
-
-
 
   const handleMouseOver = (e) => {
      // Open the drawer when hovering over a menu item

@@ -137,8 +137,6 @@ const userSlice = createSlice({
 });
 
 export const updateCart = (id,payload) => async (dispatch) => {
-    console.log(id);
-    console.log(payload);
     try {
       const response = await UpdateCart(id, payload);
       if (response.success) {
