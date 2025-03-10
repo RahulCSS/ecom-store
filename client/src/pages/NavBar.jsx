@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Menu, Dropdown, message, Spin, Button, Badge } from 'antd';
+import { Avatar, Menu, Dropdown, message, Spin, Button, Badge, Drawer, Space} from 'antd';
 import Icon, { SearchOutlined, ShoppingCartOutlined, UserOutlined, ProfileOutlined, 
   HeartOutlined, GiftOutlined, BankOutlined, LogoutOutlined, TruckOutlined,
   createFromIconfontCN } from '@ant-design/icons';
@@ -16,6 +16,13 @@ import logo from '../assets/logo.png'
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
   const [currentKey, setCurrentKey] = useState(null);
   const user = useSelector((state)=> state.user);
   const isUser = !!user.id;
@@ -57,6 +64,14 @@ const NavBar = () => {
     showSignup();
     dispatch(setUserRole('Delivery'));
   }
+  const handleNavigateMyAccount =() => {
+    if (role === 'Customer')
+      navigate('/myaccount');
+  }
+  const handleNavigateWishlist =() => {
+    if (role === 'Customer')
+      navigate('/wishlist');
+  }
   const handleNavigateCart =() => {
     if (role === 'Customer') 
       navigate('/cart');
@@ -64,6 +79,10 @@ const NavBar = () => {
   const handleCheckout =() =>{
     if (role === 'Customer') 
       navigate('/checkout');
+  }
+  const handleNavigateOrders =() =>{
+    if (role === 'Customer')
+      navigate('/orders');
   }
   const handleNavigateHome = () =>{
     navigate('/');
@@ -127,10 +146,10 @@ const NavBar = () => {
     { key: 'welcome', label: isUser ? `Welcome, ${user.name}` : renderMenuLabel('Welcome to ZipCart') },
     ...(isUser && (role === 'Admin' || role === 'Delivery Agent' || role === 'Vendor') ? [] : [
       { type: 'divider' },
-      { key: 'myaccount', label: 'My Account', icon: <UserOutlined /> },
-      { key: 'orders', label: 'Orders', icon: <ProfileOutlined /> },
-      { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> },
-      { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> },
+      { key: 'myaccount', label: 'My Account', icon: <UserOutlined /> , onClick: !isUser ? showLogin : handleNavigateMyAccount,},
+      { key: 'orders', label: 'Orders', icon: <ProfileOutlined /> , onClick: !isUser ? showLogin : handleNavigateOrders,},
+      { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> , onClick: !isUser ? showLogin : handleNavigateWishlist,},
+      { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> , onClick: !isUser ? showLogin : null,},
     ]),
     ...(isUser ? [
       { key: 'logout', label: 'Logout', icon: <LogoutOutlined />, onClick: logout },
@@ -312,7 +331,7 @@ const NavBar = () => {
   return (
     <div >
       {/* Navbar Container */}
-      <div className="max-w-screen-3xl mx-auto px-[5rem] pt-2 pb-0 z-50 flex justify-between items-center w-full border-b shadow-lg bg-white">
+      <div className="max-w-screen-3xl mx-auto px-[5rem] pt-2 pb-0 z-50 flex justify-between items-center w-full border-b shadow-lg bg-white fixed top-0">
 
         {/* Logo */}
         <div className="flex items-center space-x-4 mx-4">
@@ -336,7 +355,7 @@ const NavBar = () => {
         <div className="flex items-center gap-2">
           {(role ==='Customer' || role === null) && (
             <>
-              <SearchOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" />
+              <SearchOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" onClick={showDrawer}/>
               <Dropdown menu={{ items: wishlistItems }} overlayClassName="sharp-corner-dropdown" placement="bottom" dropdownStyle={{ minWidth: '200px' }}>
                 <Badge  count={wishlist.length}>
                   <a onClick={(e) => e.preventDefault()}>
@@ -369,6 +388,24 @@ const NavBar = () => {
               {!isUser && <LoginModal />}
               {!isUser && <SignupModal />}
             </>)}
+
+      <Drawer
+        title="Search Product"
+        onClose={onClose}
+        open={open}
+        key="right"
+        extra={
+          <Space>
+
+            <Button type="primary" onClick={onClose}>
+              Search
+            </Button>
+          </Space>}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </div>
   );
 };

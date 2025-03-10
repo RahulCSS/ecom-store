@@ -7,7 +7,7 @@ import Footer from '../components/Home/Footer'
 
 const Home = () => {
   return (
-    <div className='max-w-screen-2xl mx-auto min-h-screen flex flex-col justify-center'>
+    <div className='max-w-screen-2xl mx-auto min-h-screen flex flex-col justify-center mt-[55px]'>
         <Carouselbanner />
         <CarouselBelt />
         <OfferZone />

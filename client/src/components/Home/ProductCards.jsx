@@ -25,7 +25,7 @@ const ProductCards = ({ category }) => {
   };
 
   return (
-    <div className="pt-5">
+    <div className="pt-5 hide-scrollbar">
       <div className="relative flex items-center justify-center">
         
         <Button

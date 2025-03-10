@@ -69,16 +69,16 @@ const ProductCategory = ({ category, product }) => {
 
 
   return (
-    <Layout className="min-h-screen">
-      <Header className="bg-white text-3xl py-5 text-center">
+    <Layout className="min-h-screen my-5">
+      <Header className="bg-transparent text-4xl py-5 text-center ">
         {category}
       </Header>
-      <Content className="px-5 bg-white">
+      <Content className="px-5 bg-white py-4">
         {Object.keys(product).map((subcategory) => {
           const productsInSubcategory = product[subcategory];
 
           return (
-            <div key={subcategory} className="flex items-center justify-center relative mb-8">
+            <div key={subcategory} className="flex items-center justify-center relative mb-8 ">
               <div className="relative w-full">
               <h2 className="text-2xl font-semibold pb-5">{subcategory}</h2>
               <div className="flex items-center justify-center relative mb-8">
@@ -90,7 +90,7 @@ const ProductCategory = ({ category, product }) => {
 
               <div
                 ref={scrollContainerRef}
-                className="flex overflow-x-auto whitespace-nowrap gap-4 py-4 w-full scroll-smooth"
+                className="flex overflow-x-auto whitespace-nowrap gap-4 py-4 w-full scroll-smooth hide-scrollbar"
               >
                 {productsInSubcategory.map((productItem, index) => {
                   
