@@ -36,6 +36,18 @@ export const GetCurrentUser = async () => {
     }
 };
 
+// Update User
+export const UpdateUser = async (id, payload) => {
+    console.log(id);
+    console.log(payload);
+    try{
+        const response = await axiosInstance.patch(`/api/user/updateuser/${id}`,payload);
+        return response.data;
+    }catch(err){
+        return err;
+    }
+};
+
 //Update Cart
 export const UpdateCart = async (id, payload) => {
     try{

@@ -87,7 +87,26 @@ const getCurrentUser = async (req, res) => {
     }
   };
   
-
+// Update User
+const updateUser = async (req, res) => {
+    const userId = req.params.id;
+    try {
+      const user = await userModel.findById(userId);
+      if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      const updatedUser = await userModel.findByIdAndUpdate(
+        userId,
+        req.body,
+        { new: true, runValidators: true }
+      );
+      res.status(200).json({ success: true, data: updatedUser });
+    }
+    catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
 
 
 // Update Cart
@@ -147,4 +166,4 @@ const updateCart = async (req,res) =>{
         }
         };
 
-export {loginUser, registerUser, getCurrentUser, updateCart, updateWishlist, clearCart};
+export {loginUser, registerUser, getCurrentUser, updateCart, updateWishlist, clearCart, updateUser};

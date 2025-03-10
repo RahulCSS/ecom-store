@@ -12,6 +12,7 @@ const userSlice = createSlice({
         id: null,
         name: null,
         email: null,
+        profile_pic: null,
         phone_number: null,
         address: null,
         role: null,
@@ -33,6 +34,7 @@ const userSlice = createSlice({
             newState.id = action.payload._id;
             newState.name = action.payload.name;
             newState.email = action.payload.email;
+            newState.profile_pic = action.payload.profile_pic;
             newState.phone_number = action.payload.phone_number;
             newState.address = action.payload.address;
             newState.role = action.payload.role;
@@ -67,6 +69,7 @@ const userSlice = createSlice({
             state.id = null;
             state.name = null;
             state.email = null;
+            state.profile_pic = null;
             state.phone_number = null;
             state.address = null;
             state.role = null;
