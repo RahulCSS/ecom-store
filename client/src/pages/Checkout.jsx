@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Layout, Typography, Button, Form,  Input } from 'antd';
 import { loadStripe } from '@stripe/stripe-js';
 import { createCheckoutSession } from '../apicalls/payment';
-import { useNavigate } from 'react-router-dom';
 const { TextArea } = Input;
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -44,7 +43,6 @@ const Checkout = () => {
                 const { sessionId } = await createCheckoutSession({ cart: cartItems, customerDetails: deliveryDetails });
                 const stripe = await stripePromise;
                 const { error } = await stripe.redirectToCheckout({ sessionId });
-                console.log(sessionId);
                 if (error) {
                     console.error("Error redirecting to checkout:", error);
                 }

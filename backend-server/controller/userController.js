@@ -153,7 +153,6 @@ const updateCart = async (req,res) =>{
             return res.status(400).json({ error: 'User ID is required' });
         }
         try {
-            console.log('Clearing cart for user:', id);
             const user = await userModel.findById(id);
     
             if (!user) {
