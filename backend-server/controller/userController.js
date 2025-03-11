@@ -148,14 +148,17 @@ const updateCart = async (req,res) =>{
     
     //Clear Cart
     const clearCart = async (req, res) => {
+        const { id } = req.params;
+        if (!id || id === 'null') {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
         try {
-            const { id } = req.params;
+            console.log('Clearing cart for user:', id);
             const user = await userModel.findById(id);
     
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-    
             user.cart = []; 
             await user.save();
     

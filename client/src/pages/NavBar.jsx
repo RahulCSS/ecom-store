@@ -77,12 +77,12 @@ const NavBar = () => {
       navigate('/wishlist');
   }
   const handleNavigateCart =() => {
-    if (role === 'Customer') 
+    if (role === 'Customer' && cart.length !=0) 
       navigate('/cart');
   }
   const handleCheckout =() =>{
-    if (role === 'Customer') 
-      navigate('/ordersummary');
+    if (role === 'Customer' && cart.length !=0) 
+      navigate('/checkout');
   }
   const handleNavigateOrders =() =>{
     if (role === 'Customer')

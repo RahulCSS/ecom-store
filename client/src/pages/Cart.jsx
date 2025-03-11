@@ -48,9 +48,9 @@ const Cart = () => {
     const handleDeletefromCart =(id) => {
         dispatch(deletefromCart(id));
     }
-    const handleNavigateOrderSummary = () => {
+    const handleNavigateCheckout = () => {
         if(cartItems.length != 0)
-        navigate('/ordersummary');
+        navigate('/checkout');
     };
     
     useEffect(() => {
@@ -114,7 +114,7 @@ const Cart = () => {
                     Total Amount: ₹{total}
                 </div>
                 <Button
-                    onClick={handleNavigateOrderSummary}
+                    onClick={handleNavigateCheckout}
                     type="primary"
                     size="large"
                     className="w-full sm:w-auto"
