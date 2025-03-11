@@ -82,11 +82,15 @@ const NavBar = () => {
   }
   const handleCheckout =() =>{
     if (role === 'Customer') 
-      navigate('/checkout');
+      navigate('/ordersummary');
   }
   const handleNavigateOrders =() =>{
     if (role === 'Customer')
       navigate('/orders');
+  }
+  const handleNavidateCoupon = () =>{
+    if (role === 'Customer')
+      navigate('/coupon');
   }
   const handleNavigateHome = () =>{
     navigate('/');
@@ -216,7 +220,7 @@ const NavBar = () => {
       { key: 'myaccount', label: 'My Account', icon: <UserOutlined /> , onClick: !isUser ? showLogin : handleNavigateMyAccount,},
       { key: 'orders', label: 'Orders', icon: <ProfileOutlined /> , onClick: !isUser ? showLogin : handleNavigateOrders,},
       { key: 'wishlist', label: 'Wishlist', icon: <HeartOutlined /> , onClick: !isUser ? showLogin : handleNavigateWishlist,},
-      { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> , onClick: !isUser ? showLogin : null,},
+      { key: 'coupons', label: 'Coupons', icon: <GiftOutlined /> , onClick: !isUser ? showLogin : handleNavidateCoupon,},
     ]),
     ...(isUser ? [
       { key: 'logout', label: 'Logout', icon: <LogoutOutlined />, onClick: logout },

@@ -12,6 +12,8 @@ import Success from './pages/Success'
 import Cancel from './pages/Cancel'
 import Wishlist from './pages/Wishlist'
 import MyAccount from './pages/MyAccount'
+import Coupon from './pages/Coupon'
+import OrderSummary from './pages/OrderSummary'
 
 const App = () => {
   return (
@@ -27,6 +29,8 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/ordersummary" element={<OrderSummary />} />
+        <Route path="/coupon" element={<Coupon />} />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
       </Routes>

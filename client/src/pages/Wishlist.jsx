@@ -7,7 +7,6 @@ const Wishlist = () => {
   const user = useSelector((state)=> state.user);
   const products = useSelector((state) => state.product.fetchProduct);
   const wishlist = user?.wishlist;
-  console.log(wishlist);
 
   return (
     <div className='max-w-screen-2xl mx-auto min-h-screen  mt-[55px] pt-20'>
@@ -18,7 +17,7 @@ const Wishlist = () => {
           if (!product) return null; 
   
           return (
-            <div key={productId} className="flex items-center space-x-4 max-w-[800px] max-h-32 w-[800px] overflow-hidden gap-10">
+            <div key={productId} className="flex items-center space-x-4 max-w-[960px] max-h-[200px] w-[960px] overflow-hidden  bg-white rounded-lg shadow-md gap-5 p-2">
               <div className="flex-shrink-0 w-[120px] ">
                 <img
                   alt="product"
@@ -26,19 +25,19 @@ const Wishlist = () => {
                   className="w-[120px] h-[120px] object-cover"
                 />
               </div>
-              <div className="flex-1 w-[5800px]">
+              <div className="flex-1 w-[720px]">
                 <div className="text-l ">{product.name}</div>
                 <div className="text-xs font-thin ">{product.description}</div>
                 <div className="flex justify-between items-center">
                   <div className="text-sm font-light">₹{product.price}</div>
                 </div>
               </div>
-              <div className="flex justify-between items-center w-[100px]">
+              <div className="flex justify-around items-center w-[120px]">
                 <Tooltip title="Add to Cart" color='geekblue' key="geekblue">
-                  <ShoppingCartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" onClick={() => handleAddToCart(product._id)} />
+                  <ShoppingCartOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer " onClick={() => handleAddToCart(product._id)} />
                 </Tooltip>
                 <Tooltip title="Remove" color='red' key="red">
-                  <DeleteOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer px-2" onClick={() => handleRemoveFromWishlist(product._id)} />
+                  <DeleteOutlined style={{ fontSize: '1.5rem' }} className="cursor-pointer " onClick={() => handleRemoveFromWishlist(product._id)} />
                 </Tooltip>
               </div>
             </div>
